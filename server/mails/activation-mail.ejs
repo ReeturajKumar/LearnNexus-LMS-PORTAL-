@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Activate Your Account</title>
+  <style type="text/css">
+    body {
+      margin: 0;
+      padding: 0;
+      min-width: 100%;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      background-color: #f4f4f4;
+      color: #333333;
+    }
+    .email-wrapper {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .email-header {
+      background-color: #0056b3;
+      padding: 24px;
+      text-align: center;
+      color: #ffffff;
+    }
+    .email-header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .email-body {
+      padding: 24px;
+      color: #333333;
+    }
+    .email-body h2 {
+      font-size: 20px;
+      color: #0056b3;
+      text-align: center;
+      margin: 20px 0;
+    }
+    .email-body p {
+      margin: 0 0 24px;
+    }
+    .email-body .activation-code {
+      display: inline-block;
+      background-color: #f1f3f5;
+      padding: 12px 24px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #0056b3;
+      border-radius: 4px;
+      text-align: center;
+      margin: 20px 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .email-footer {
+      background-color: #f4f4f4;
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #555555;
+    }
+    .email-footer a {
+      color: #0056b3;
+      text-decoration: none;
+    }
+    .email-footer p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-wrapper">
+    <div class="email-header">
+      <h1>Welcome to LearnNexus</h1>
+    </div>
+    <div class="email-body">
+      <p>Hello <%= user.name %>,</p>
+      <p>Thank you for registering with us! We're thrilled to have you on board. To complete your registration, please use the activation code below:</p>
+      <div class="activation-code"><%= activationCode %></div>
+      <p>Simply enter this code on the activation page to verify your account.</p>
+      <p>If you did not sign up for this account, please disregard this email.</p>
+    </div>
+    <div class="email-footer">
+      <p>Need help? Contact our <a href="mailto:learnnexus3@gmail.com">support team</a>.</p>
+      <p>&copy; 2024 LeaenNexus. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>

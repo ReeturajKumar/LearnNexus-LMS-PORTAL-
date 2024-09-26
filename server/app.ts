@@ -4,6 +4,7 @@ export const app = express();
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import {ErrorMiddelware} from './middelware/error';
+import userRouter from "./routes/userRoute";
 
 
 //body parser
@@ -18,6 +19,9 @@ app.use(
     origin: process.env.ORIGIN,
   })
 );
+
+//routes
+app.use("/api/v1", userRouter);
 
 //test route
 app.get("/test", (req: Request, res: Response, next: NextFunction) => {
