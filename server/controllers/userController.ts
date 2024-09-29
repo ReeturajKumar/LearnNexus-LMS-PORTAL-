@@ -14,6 +14,7 @@ import {
 } from "../utils/jwt";
 import { redis } from "../utils/redis";
 import { getUserById } from "../Services/userService";
+import cloudinary from 'cloudinary';
 
 //register user
 interface IRegistrationBody {
@@ -222,6 +223,8 @@ export const updateAccessToken = CatchAsyncError(
         }
       );
 
+      req.user = user;
+
       res.cookie("access_token", accessToken, accessTokenOptions);
       res.cookie("refresh_token", refreshToken, refreshTokenOptions);
 
@@ -250,7 +253,6 @@ export const getUserInfo = CatchAsyncError(
   }
 );
 
-
 interface ISocialAuthBody {
   email: string;
   name: string;
@@ -275,3 +277,136 @@ export const socialAuth = CatchAsyncError(
     }
   }
 );
+
+//update user info
+
+interface IUpdateUserInfo {
+  name?: string;
+  email?: string;
+}
+
+export const updateUserInfo = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { name, email } = req.body as IUpdateUserInfo;
+    const userId = req.user?._id as string;
+
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return next(new ErroHandler("User not found", 404));
+    }
+
+    if (email) {
+      const isEmailExist = await userModel.findOne({ email });
+      if (isEmailExist) {
+        return next(new ErroHandler("Email already exists", 400));
+      }
+      user.email = email;
+    }
+
+    if (name) {
+      user.name = name;
+    }
+
+    await user.save();
+    await redis.set(userId, JSON.stringify(user));
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  }
+);
+
+
+// update user password
+interface IUpdatePassword {
+  oldPassword: string,
+  newPassword: string,
+}
+
+export const updatePassword = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { oldPassword, newPassword } = req.body as IUpdatePassword;
+
+      if (!oldPassword || !newPassword) {
+        return next(new ErroHandler("Please enter old and new password", 400));
+      }
+
+      const user = await userModel.findById(req.user?._id).select("+password");
+
+      if (!user || !user.password) {
+        return next(new ErroHandler("Invalid user", 400));
+      }
+
+      const isPasswordMatch = await user.comparePassword(oldPassword);
+
+
+      if (!isPasswordMatch) {
+        return next(new ErroHandler("Invalid old password", 400));
+      }
+
+      user.password = newPassword;
+      await user.save();
+
+      await redis.set(req.user?._id as string, JSON.stringify(user));
+
+      res.status(200).json({
+        success: true,
+        message: "Password updated successfully",
+      });
+    } catch (error: any) {
+      return next(new ErroHandler(error.message, 400));
+    }
+  }
+);
+
+
+//update user profile picture
+interface IUpdateProfilePicture{
+  avatar: string,
+}
+export const updateProfilePicture = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const {avatar} = req.body;
+
+      const userId = req.user?._id;
+
+      const user = await userModel.findById(userId);
+
+      if(avatar && user){
+        if(user?.avatar?.public_id){
+          // first delete the old image
+          await cloudinary.v2.uploader.destroy(user?.avatar?.public_id);
+          const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+            folder: "avatars",
+            width: 150,
+          });
+          user.avatar={
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url
+          }
+        } else{
+          const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+            folder: "avatars",
+            width: 150,
+          });
+          user.avatar={
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url
+          }
+        }
+      }
+
+      await user?.save();
+      await redis.set(userId as string,JSON.stringify(user));
+
+      res.status(200).json({
+        success: true,
+        user,
+      })
+    } catch (error: any) {
+      return next(new ErroHandler(error.message, 400));
+    }
+})
