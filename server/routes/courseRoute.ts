@@ -1,5 +1,5 @@
 import express from "express";
-import { editCourse, uploadCourse } from "../controllers/courseController";
+import { editCourse, getAllCourse, getSingleCourse, uploadCourse } from "../controllers/courseController";
 import { authorizeRoles, isAuthenticated } from "../middelware/auth";
 const courseRouter = express.Router();
 courseRouter.post(
@@ -15,4 +15,17 @@ courseRouter.put(
   authorizeRoles("admin"),
   editCourse,
 );
+
+courseRouter.get(
+  "/get-course/:id",
+  getSingleCourse,
+);
+
+
+courseRouter.get(
+  "/get-courses",
+  getAllCourse,
+);
+
+
 export default courseRouter;
