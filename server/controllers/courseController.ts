@@ -82,19 +82,18 @@ export const getSingleCourse = CatchAsyncError(
           success: true,
           course,
         });
+      } else {
+        const course = await CourseModel.findById(req.params.id).select(
+          "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
+        );
+
+        await redis.set(courseId, JSON.stringify(course));
+
+        res.status(200).json({
+          success: true,
+          course,
+        });
       }
-    else{
-      const course = await CourseModel.findById(req.params.id).select(
-        "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
-      );
-
-      await redis.set(courseId, JSON.stringify(course));
-
-      res.status(200).json({
-        success: true,
-        course,
-      });
-    }
     } catch (error: any) {
       return next(new ErroHandler(error.message, 500));
     }
@@ -107,24 +106,53 @@ export const getAllCourse = CatchAsyncError(
     try {
       const isCatchExist = await redis.get("allcourses");
 
-      if(isCatchExist){ 
+      if (isCatchExist) {
         const courses = JSON.parse(isCatchExist);
         return res.status(200).json({
           success: true,
           courses,
         });
-      } else{
-      const courses = await CourseModel.find().select(
-        "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
+      } else {
+        const courses = await CourseModel.find().select(
+          "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
+        );
+
+        await redis.set("allCourses", JSON.stringify(courses));
+
+        res.status(200).json({
+          success: true,
+          courses,
+        });
+      }
+    } catch (error: any) {
+      return next(new ErroHandler(error.message, 500));
+    }
+  }
+);
+
+//get course content --- only authenticated user can access
+export const getCourseByUser = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userCourseList = req.user?.courses;
+      const courseId = req.params.id;
+
+      const courseExist = userCourseList?.find(
+        (course: any) => course._id.toString() === courseId
       );
 
-      await redis.set("allCourses", JSON.stringify(courses));
+      if (!courseExist) {
+        return next(
+          new ErroHandler("You are not eligble to access this course", 404)
+        );
+      }
 
+      const course = await CourseModel.findById(courseId);
+      const content = course?.courseData;
       res.status(200).json({
         success: true,
-        courses,
-      })
-    }
+        content,
+      });
     } catch (error: any) {
       return next(new ErroHandler(error.message, 500));
     }
