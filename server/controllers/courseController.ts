@@ -5,6 +5,12 @@ import cloudinary from "cloudinary";
 import { createCourse } from "../Services/courseService";
 import CourseModel from "../models/courseModel";
 import { redis } from "../utils/redis";
+import mongoose from "mongoose";
+import { userInfo } from "os";
+import { title } from "process";
+import ejs from "ejs";
+import path from "path";
+import sendMail from "../utils/sendMails";
 
 // create course
 export const uploadCourse = CatchAsyncError(
@@ -158,3 +164,128 @@ export const getCourseByUser = CatchAsyncError(
     }
   }
 );
+
+
+//add question in course 
+interface IAddQuestionData {
+  question: string;
+  courseId: string;
+  contentId: string;
+}
+
+
+export const addQuestion = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const {question, courseId, contentId} : IAddQuestionData = req.body;
+
+      const course = await CourseModel.findById(courseId);
+
+      if(!mongoose.Types.ObjectId.isValid(contentId)){
+        return next (new ErroHandler("Invalid content id", 400))
+      }
+
+      const courseContent = course?.courseData?.find((item: any) => item._id.equals(contentId));
+
+      if(!courseContent){
+        return next (new ErroHandler("Invalid content id", 400))
+      }
+
+      //creating new question
+      const newQuestion:any = {
+        user: req.user,
+        question,
+      }
+
+      //add this question to our course content
+      courseContent.questions.push(newQuestion);
+
+      //save our course
+      await course?.save();
+      res.status(201).json({  
+        success: true,
+        course,
+      })
+    } catch (error:any) {
+      return next (new ErroHandler(error.message, 500))
+    }
+})
+
+
+//adding answer of question in course
+interface IAddAnswerData {
+  answer: string;
+  courseId: string;
+  contentId: string;
+  questionId: string;
+}
+
+
+export const addAnswer = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const {answer, courseId, contentId, questionId} : IAddAnswerData = req.body;
+
+      const course = await CourseModel.findById(courseId);
+
+      if(!mongoose.Types.ObjectId.isValid(contentId)){
+        return next (new ErroHandler("Invalid content id", 400))
+      }
+
+      const courseContent = course?.courseData?.find((item: any) => item._id.equals(contentId));
+
+      if(!courseContent){
+        return next (new ErroHandler("Invalid content id", 400))
+      }
+
+      const question = courseContent?.questions?.find((item: any) => item._id.equals(questionId));
+
+      if(!question){
+        return next (new ErroHandler("Invalid question id", 400))
+      }
+
+
+      // creating answer object data 
+      const newAnswer:any = {
+        user: req.user,
+        answer
+      }
+
+      //add answer to our course content
+      question.questionReplies.push(newAnswer);
+      //save our course
+      await course?.save();
+
+      if(req.user?._id === question.user._id){
+        // create a notification  
+      } else{
+        const data = {
+          name: question.user.name,
+          title: courseContent.title
+        }
+
+        //create notification
+        const html = await ejs.renderFile(
+          path.join(__dirname, '../mails/answer-mail.ejs'),
+          data);
+
+          try {
+            await sendMail({
+              email: question.user.email,
+              subject: "New Reply Notification",
+              template: "answer-mail",
+              data,
+            })
+          } catch (error:any) {
+            return next (new ErroHandler(error.message, 500))
+          }
+      }
+
+      res.status(200).json({
+        success: true,
+        course,
+      })
+    } catch (error:any) {
+      return next (new ErroHandler(error.message, 500))
+    }
+})
