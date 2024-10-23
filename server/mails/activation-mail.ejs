@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Activate Your Account</title>
+  <title>New Reply Notification</title>
   <style type="text/css">
     body {
       margin: 0;
@@ -47,19 +47,6 @@
     .email-body p {
       margin: 0 0 24px;
     }
-    .email-body .activation-code {
-      display: inline-block;
-      background-color: #f1f3f5;
-      padding: 12px 24px;
-      font-size: 24px;
-      font-weight: bold;
-      color: #0056b3;
-      border-radius: 4px;
-      text-align: center;
-      margin: 20px 0;
-      width: 100%;
-      box-sizing: border-box;
-    }
     .email-footer {
       background-color: #f4f4f4;
       padding: 20px;
@@ -79,18 +66,18 @@
 <body>
   <div class="email-wrapper">
     <div class="email-header">
-      <h1>Welcome to LearnNexus</h1>
+      <h1>New Reply Notification</h1>
     </div>
     <div class="email-body">
-      <p>Hello <%= user.name %>,</p>
-      <p>Thank you for registering with us! We're thrilled to have you on board. To complete your registration, please use the activation code below:</p>
-      <div class="activation-code"><%= activationCode %></div>
-      <p>Simply enter this code on the activation page to verify your account.</p>
-      <p>If you did not sign up for this account, please disregard this email.</p>
+      <p>Hello <%= name %>,</p>
+      <p>A new reply has been added to your question in the video "<%= title %>".</p>
+      <p>Please log in to our website to view the reply and continue the discussion.</p>
+      <p><a href="your-website-link.com">Log in to your account</a></p>
+      <p>Thank you for being an active part of our community!</p>
     </div>
     <div class="email-footer">
-      <p>Need help? Contact our <a href="mailto:learnnexus3@gmail.com">support team</a>.</p>
-      <p>&copy; 2024 LeaenNexus. All rights reserved.</p>
+      <p>Need help? Contact our <a href="mailto:support@example.com">support team</a>.</p>
+      <p>&copy; 2024 LearnNexus. All rights reserved.</p>
     </div>
   </div>
 </body>

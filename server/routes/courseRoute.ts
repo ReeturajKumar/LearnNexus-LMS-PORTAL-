@@ -44,7 +44,7 @@ courseRouter.put(
 courseRouter.put(
   "/add-answer",
   isAuthenticated,
-  addAnswer,
+  addAnswer
 );
 
 

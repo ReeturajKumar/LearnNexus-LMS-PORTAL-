@@ -6,9 +6,7 @@ import { createCourse } from "../Services/courseService";
 import CourseModel from "../models/courseModel";
 import { redis } from "../utils/redis";
 import mongoose from "mongoose";
-import { userInfo } from "os";
-import { title } from "process";
-import ejs from "ejs";
+import ejs, { name } from "ejs";
 import path from "path";
 import sendMail from "../utils/sendMails";
 
@@ -173,119 +171,151 @@ interface IAddQuestionData {
   contentId: string;
 }
 
-
 export const addQuestion = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const {question, courseId, contentId} : IAddQuestionData = req.body;
+      const { question, courseId, contentId }: IAddQuestionData = req.body;
 
+      // Validate courseId and contentId
+      if (!mongoose.Types.ObjectId.isValid(courseId)) {
+        return next(new ErroHandler("Invalid course ID", 400));
+      }
+      if (!mongoose.Types.ObjectId.isValid(contentId)) {
+        return next(new ErroHandler("Invalid content ID", 400));
+      }
+
+      // Check if user is authenticated
+      if (!req.user) {
+        return next(new ErroHandler("User not authenticated", 401));
+      }
+
+      // Find the course
       const course = await CourseModel.findById(courseId);
 
-      if(!mongoose.Types.ObjectId.isValid(contentId)){
-        return next (new ErroHandler("Invalid content id", 400))
+      if (!course) {
+        return next(new ErroHandler("Course not found", 404));
       }
 
+      // Find the specific course content
       const courseContent = course?.courseData?.find((item: any) => item._id.equals(contentId));
 
-      if(!courseContent){
-        return next (new ErroHandler("Invalid content id", 400))
+      if (!courseContent) {
+        return next(new ErroHandler("Content not found in the course", 404));
       }
 
-      //creating new question
-      const newQuestion:any = {
-        user: req.user,
+      // Creating a new question with user details
+      const newQuestion: any = {
+        user: {
+          _id: req.user._id,
+          name: req.user.name,
+          email: req.user.email,
+        },
         question,
-      }
+      };
 
-      //add this question to our course content
+      // Add the question to course content
       courseContent.questions.push(newQuestion);
 
-      //save our course
-      await course?.save();
-      res.status(201).json({  
+      // Save the updated course
+      await course.save();
+
+      res.status(201).json({
         success: true,
+        message: "Question added successfully",
         course,
-      })
-    } catch (error:any) {
-      return next (new ErroHandler(error.message, 500))
+      });
+    } catch (error: any) {
+      return next(new ErroHandler(error.message || "Server error", 500));
     }
-})
+  }
+);
+
+
 
 
 //adding answer of question in course
 interface IAddAnswerData {
+  questionId: string;
   answer: string;
   courseId: string;
   contentId: string;
-  questionId: string;
 }
-
 
 export const addAnswer = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const {answer, courseId, contentId, questionId} : IAddAnswerData = req.body;
+      const { answer, questionId, courseId, contentId }: IAddAnswerData = req.body;
 
+      // Check if the user is authenticated
+      if (!req.user) {
+        return next(new ErroHandler("User not authenticated", 401));
+      }
+
+      // Validate courseId and contentId
+      if (!mongoose.Types.ObjectId.isValid(courseId)) {
+        return next(new ErroHandler("Invalid course ID", 400));
+      }
+
+      // Find the course
       const course = await CourseModel.findById(courseId);
-
-      if(!mongoose.Types.ObjectId.isValid(contentId)){
-        return next (new ErroHandler("Invalid content id", 400))
+      if (!course) {
+        return next(new ErroHandler("Course not found", 404));
       }
 
+      // Find the specific course content
       const courseContent = course?.courseData?.find((item: any) => item._id.equals(contentId));
-
-      if(!courseContent){
-        return next (new ErroHandler("Invalid content id", 400))
+      if (!courseContent) {
+        return next(new ErroHandler("Content not found in the course", 404));
       }
 
+      // Find the question inside the course content
       const question = courseContent?.questions?.find((item: any) => item._id.equals(questionId));
-
-      if(!question){
-        return next (new ErroHandler("Invalid question id", 400))
+      if (!question || !question.user) {
+        return next(new ErroHandler("Question not found or user details missing", 404));
       }
 
-
-      // creating answer object data 
-      const newAnswer:any = {
-        user: req.user,
-        answer
-      }
-
-      //add answer to our course content
+      // Add the answer to the question
+      const newAnswer: any = { user: req.user._id, answer };
       question.questionReplies.push(newAnswer);
-      //save our course
-      await course?.save();
 
-      if(req.user?._id === question.user._id){
-        // create a notification  
-      } else{
+      await course.save();
+
+      // Notify the user who added the question, if they're not the one answering
+      if (req.user._id.toString() !== question.user._id.toString()) {
         const data = {
           name: question.user.name,
-          title: courseContent.title
-        }
+          title: courseContent.title,
+        };
 
-        //create notification
         const html = await ejs.renderFile(
-          path.join(__dirname, '../mails/answer-mail.ejs'),
-          data);
+          path.join(__dirname, "../mails/answer-mail.ejs"),
+          data
+        );
 
-          try {
-            await sendMail({
-              email: question.user.email,
-              subject: "New Reply Notification",
-              template: "answer-mail",
-              data,
-            })
-          } catch (error:any) {
-            return next (new ErroHandler(error.message, 500))
-          }
+        // Send email notification to the user who asked the question
+        try {
+          await sendMail({
+            email: question.user.email,
+            subject: "New Answer to Your Question",
+            template: "answer-mail.ejs",
+            data: { ...data, html },
+          });
+        } catch (emailError: any) {
+          console.error("Error sending email notification:", emailError.message);
+        }
+      } else {
+        console.log("No notification sent as the user answered their own question.");
       }
 
+      // Response back with success
       res.status(200).json({
         success: true,
+        message: "Answer added successfully and user notified if applicable",
         course,
-      })
-    } catch (error:any) {
-      return next (new ErroHandler(error.message, 500))
+      });
+    } catch (error: any) {
+      console.error("Error in addAnswer:", error);
+      return next(new ErroHandler(error.message || "Server error", 500));
     }
-})
+  }
+);
