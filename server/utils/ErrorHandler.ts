@@ -1,6 +1,6 @@
 class ErroHandler extends Error {
   stausCode : Number
-  constructor(message: any,statusCode : Number){
+  constructor(message: any,statusCode = 500){
     super(message);
     this.stausCode = statusCode;
 

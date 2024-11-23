@@ -163,8 +163,7 @@ export const getCourseByUser = CatchAsyncError(
   }
 );
 
-
-//add question in course 
+//add question in course
 interface IAddQuestionData {
   question: string;
   courseId: string;
@@ -197,7 +196,9 @@ export const addQuestion = CatchAsyncError(
       }
 
       // Find the specific course content
-      const courseContent = course?.courseData?.find((item: any) => item._id.equals(contentId));
+      const courseContent = course?.courseData?.find((item: any) =>
+        item._id.equals(contentId)
+      );
 
       if (!courseContent) {
         return next(new ErroHandler("Content not found in the course", 404));
@@ -230,9 +231,6 @@ export const addQuestion = CatchAsyncError(
   }
 );
 
-
-
-
 //adding answer of question in course
 interface IAddAnswerData {
   questionId: string;
@@ -244,7 +242,8 @@ interface IAddAnswerData {
 export const addAnswer = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { answer, questionId, courseId, contentId }: IAddAnswerData = req.body;
+      const { answer, questionId, courseId, contentId }: IAddAnswerData =
+        req.body;
 
       // Check if the user is authenticated
       if (!req.user) {
@@ -263,15 +262,21 @@ export const addAnswer = CatchAsyncError(
       }
 
       // Find the specific course content
-      const courseContent = course?.courseData?.find((item: any) => item._id.equals(contentId));
+      const courseContent = course?.courseData?.find((item: any) =>
+        item._id.equals(contentId)
+      );
       if (!courseContent) {
         return next(new ErroHandler("Content not found in the course", 404));
       }
 
       // Find the question inside the course content
-      const question = courseContent?.questions?.find((item: any) => item._id.equals(questionId));
+      const question = courseContent?.questions?.find((item: any) =>
+        item._id.equals(questionId)
+      );
       if (!question || !question.user) {
-        return next(new ErroHandler("Question not found or user details missing", 404));
+        return next(
+          new ErroHandler("Question not found or user details missing", 404)
+        );
       }
 
       // Add the answer to the question
@@ -301,10 +306,15 @@ export const addAnswer = CatchAsyncError(
             data: { ...data, html },
           });
         } catch (emailError: any) {
-          console.error("Error sending email notification:", emailError.message);
+          console.error(
+            "Error sending email notification:",
+            emailError.message
+          );
         }
       } else {
-        console.log("No notification sent as the user answered their own question.");
+        console.log(
+          "No notification sent as the user answered their own question."
+        );
       }
 
       // Response back with success
@@ -319,3 +329,112 @@ export const addAnswer = CatchAsyncError(
     }
   }
 );
+
+// adding review in course
+
+interface IAddReviewData {
+  review : string;
+  rating: number;
+  userId: string;
+}
+
+export const addReview = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userCourseList = req.user?.courses;
+      const courseId = req.params.id;
+
+      const courseExist = userCourseList?.some(
+        (course: any) => course._id.toString() === courseId.toString()
+      );
+
+      if(!courseExist) {
+        return next(new ErroHandler("You are not eligible to access this course", 404));
+      }
+
+      const course = await CourseModel.findById(courseId);
+      const {review, rating} : IAddReviewData = req.body;
+
+      const reviewData : any = {
+        user: req.user,
+        rating,
+        comment: review,
+      }
+
+      course?.reviews.push(reviewData);
+
+      let avg = 0;
+      course?.reviews.forEach((rev: any) => {
+        avg += rev.rating;
+      });
+
+      if(course){
+        course.ratings = avg / course?.reviews.length;
+      }
+
+      await course?.save();
+
+      const notification = {
+        title: "New Review Received",
+        message: `${req.user?.name} has given a review in ${course?.name}`,
+      }
+
+
+      // create notification here : ->
+
+      res.status(200).json({
+        success: true,
+        message: "Review added successfully",
+        course,
+      })
+    } catch (error: any) {
+      return next (new ErroHandler(error.message, 500));
+    }
+})
+
+
+//add reply in reviews
+interface IAddReviewData {
+  comment: string;
+  courseId: string;
+  reviewId: string;
+}
+export const addReplyToReview = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const {comment, courseId, reviewId} = req.body as IAddReviewData;
+
+      const course = await CourseModel.findById(courseId);
+
+      if(!course) {
+        return next(new ErroHandler("Course not found", 404));
+      }
+
+      const review = course?.reviews?.find((rev: any) => rev._id.toString() === reviewId);
+
+      if(!review) {
+        return next(new ErroHandler("Review not found", 404));
+      }
+
+      const replyData : any = {
+        user: req.user,
+        comment,
+      }
+
+      if(!review.commentReplies) {
+        review.commentReplies = [];
+      }
+
+      review.commentReplies?.push(replyData);
+
+      await course.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Reply added successfully",
+        course,
+      })
+    } catch (error: any) {
+      return next (new ErroHandler(error.message, 500));
+    }
+})
