@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import {ErrorMiddelware} from './middelware/error';
 import userRouter from "./routes/userRoute";
 import courseRouter from "./routes/courseRoute";
+import orderRouter from "./routes/orderRoute";
 
 //body parser
 app.use(express.json({ limit: "50mb" }));
@@ -23,6 +24,7 @@ app.use(
 //routes
 app.use("/api/v1", userRouter); // user authentication
 app.use("/api/v1", courseRouter); // admin course creation
+app.use("/api/v1", orderRouter); // user order
 
 //test route
 app.get("/test", (req: Request, res: Response, next: NextFunction) => {
