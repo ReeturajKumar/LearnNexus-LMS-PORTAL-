@@ -1,5 +1,5 @@
 import express from 'express';
-import { activateUser, getAllUsers, getUserInfo, loginUser, logoutUser, registrationUser, socialAuth, updateAccessToken, updatePassword, updateProfilePicture, updateUserInfo, updateUserRole } from '../controllers/userController';
+import { activateUser, deleteUser, getAllUsers, getUserInfo, loginUser, logoutUser, registrationUser, socialAuth, updateAccessToken, updatePassword, updateProfilePicture, updateUserInfo, updateUserRole } from '../controllers/userController';
 import { authorizeRoles, isAuthenticated } from '../middelware/auth';
 const userRouter = express.Router();
 
@@ -18,4 +18,6 @@ userRouter.get('/get-users',isAuthenticated,authorizeRoles("admin"), getAllUsers
 
 userRouter.put('/update-user-role',isAuthenticated,authorizeRoles("admin"), updateUserRole);
 
+
+userRouter.delete('/delete-user/:id',isAuthenticated,authorizeRoles("admin"), deleteUser);
 export default userRouter;
