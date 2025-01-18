@@ -9,7 +9,7 @@ import path from "path";
 import ejs from "ejs";
 import sendMail from "../utils/sendMails";
 import NotificationModel from "../models/notificationModel";
-import { newOrder } from "../Services/orderService";
+import { getAllOrderService, newOrder } from "../Services/orderService";
 
 //create order
 export const createOrder = CatchAsyncError(
@@ -91,3 +91,15 @@ export const createOrder = CatchAsyncError(
     }
   }
 );
+
+
+// get all course -- admin
+export const getAllOrder = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      getAllOrderService(res);
+    } catch (error: any) {
+      return next(new ErroHandler(error.message, 500));
+    }
+  }
+)

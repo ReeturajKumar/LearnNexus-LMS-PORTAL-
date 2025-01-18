@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { CatchAsyncError } from "../middelware/catchAsyncErrors";
 import ErroHandler from "../utils/ErrorHandler";
 import cloudinary from "cloudinary";
-import { createCourse } from "../Services/courseService";
+import { createCourse, getAllCourseService } from "../Services/courseService";
 import CourseModel from "../models/courseModel";
 import { redis } from "../utils/redis";
 import mongoose from "mongoose";
@@ -451,3 +451,15 @@ export const addReplyToReview = CatchAsyncError(
     }
   }
 );
+
+
+// get all course -- admin
+export const getAllCourses = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      getAllCourseService(res);
+    } catch (error: any) {
+      return next(new ErroHandler(error.message, 500));
+    }
+  }
+)
