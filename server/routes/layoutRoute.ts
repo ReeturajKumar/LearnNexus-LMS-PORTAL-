@@ -1,6 +1,6 @@
 import express from "express";
 import { authorizeRoles, isAuthenticated } from "../middelware/auth";
-import { createLayout, editLayout } from "../controllers/layoutController";
+import { createLayout, editLayout, getLayout } from "../controllers/layoutController";
 
 
 const layoutRoute = express.Router();
@@ -19,6 +19,12 @@ layoutRoute.put(
   isAuthenticated,
   authorizeRoles("admin"),
   editLayout,
+);
+
+
+layoutRoute.get(
+  "/get-layout",
+  getLayout,
 );
 
 
