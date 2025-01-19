@@ -10,6 +10,7 @@ import ejs, { name } from "ejs";
 import path from "path";
 import sendMail from "../utils/sendMails";
 import NotificationModel from "../models/notificationModel";
+import userModel from "../models/userModel";
 
 // create course
 export const uploadCourse = CatchAsyncError(
@@ -142,13 +143,19 @@ export const getCourseByUser = CatchAsyncError(
       const userCourseList = req.user?.courses;
       const courseId = req.params.id;
 
-      const courseExist = userCourseList?.find(
+      console.log("User's courses: ", userCourseList); // Debugging log
+      console.log("Requested Course ID: ", courseId); // Debugging log
+
+      // Ensure we're comparing ObjectId to ObjectId or string to string
+      const courseExist = userCourseList?.some(
         (course: any) => course._id.toString() === courseId
       );
 
+      console.log("Does course exist in user's list? ", courseExist); // Debugging log
+
       if (!courseExist) {
         return next(
-          new ErroHandler("You are not eligble to access this course", 404)
+          new ErroHandler("You are not eligible to access this course", 404)
         );
       }
 
@@ -191,13 +198,17 @@ export const addQuestion = CatchAsyncError(
 
       // Find the course
       const course = await CourseModel.findById(courseId);
-
       if (!course) {
         return next(new ErroHandler("Course not found", 404));
       }
 
+      // Validate courseData
+      if (!Array.isArray(course.courseData) || course.courseData.length === 0) {
+        return next(new ErroHandler("No course data found", 404));
+      }
+
       // Find the specific course content
-      const courseContent = course?.courseData?.find((item: any) =>
+      const courseContent = course.courseData.find((item: any) =>
         item._id.equals(contentId)
       );
 
@@ -205,7 +216,12 @@ export const addQuestion = CatchAsyncError(
         return next(new ErroHandler("Content not found in the course", 404));
       }
 
-      // Creating a new question with user details
+      // Validate questions array
+      if (!Array.isArray(courseContent.questions)) {
+        return next(new ErroHandler("Questions array is invalid", 400));
+      }
+
+      // Creating a new question
       const newQuestion: any = {
         user: {
           _id: req.user._id,
@@ -218,8 +234,9 @@ export const addQuestion = CatchAsyncError(
       // Add the question to course content
       courseContent.questions.push(newQuestion);
 
+      // Create a notification for the user
       await NotificationModel.create({
-        user: req.user?._id,
+        user: req.user._id,
         title: "New Question Received",
         message: `You have a new question in ${courseContent.title}`,
       });
@@ -227,10 +244,11 @@ export const addQuestion = CatchAsyncError(
       // Save the updated course
       await course.save();
 
-      res.status(201).json({
+      // Return a successful response
+      res.status(200).json({
         success: true,
         message: "Question added successfully",
-        course,
+        question: newQuestion,
       });
     } catch (error: any) {
       return next(new ErroHandler(error.message || "Server error", 500));
@@ -252,26 +270,16 @@ export const addAnswer = CatchAsyncError(
       const { answer, questionId, courseId, contentId }: IAddAnswerData =
         req.body;
 
-      // Check if the user is authenticated
-      if (!req.user) {
-        return next(new ErroHandler("User not authenticated", 401));
-      }
-
-      // Validate courseId and contentId
+      const course = await CourseModel.findById(courseId);
       if (!mongoose.Types.ObjectId.isValid(courseId)) {
+        console.log("Invalid courseId:", courseId);
         return next(new ErroHandler("Invalid course ID", 400));
       }
 
-      // Find the course
-      const course = await CourseModel.findById(courseId);
-      if (!course) {
-        return next(new ErroHandler("Course not found", 404));
-      }
-
-      // Find the specific course content
       const courseContent = course?.courseData?.find((item: any) =>
         item._id.equals(contentId)
       );
+
       if (!courseContent) {
         return next(new ErroHandler("Content not found in the course", 404));
       }
@@ -280,28 +288,37 @@ export const addAnswer = CatchAsyncError(
       const question = courseContent?.questions?.find((item: any) =>
         item._id.equals(questionId)
       );
-      if (!question || !question.user) {
-        return next(
-          new ErroHandler("Question not found or user details missing", 404)
-        );
+
+      if (!question) {
+        return next(new ErroHandler("Invalid Question", 404));
       }
 
       // Add the answer to the question
-      const newAnswer: any = { user: req.user._id, answer };
+      const newAnswer: any = { user: req.user, answer };
       question.questionReplies.push(newAnswer);
 
-      await course.save();
+      await course?.save();
 
-      // Notify the user who added the question, if they're not the one answering
-      if (req.user._id.toString() !== question.user._id.toString()) {
+      if (req.user?._id === question.user._id.toString()) {
+        // Create notification for the user who asked the question
         await NotificationModel.create({
           user: req.user?._id,
           title: "New Answer to Your Question",
           message: `You have a new answer to your question in ${courseContent.title}`,
         });
       } else {
+        const questionUser = await userModel
+          .findById(question.user)
+          .select("email name");
+
+        if (!questionUser || !questionUser.email) {
+          return next(
+            new ErroHandler("Failed to send email: User email not found", 500)
+          );
+        }
+
         const data = {
-          name: question.user.name,
+          name: questionUser.name,
           title: courseContent.title,
         };
 
@@ -310,31 +327,24 @@ export const addAnswer = CatchAsyncError(
           data
         );
 
-        // Send email notification to the user who asked the question
         try {
           await sendMail({
-            email: question.user.email,
+            email: questionUser.email,
             subject: "New Answer to Your Question",
             template: "answer-mail.ejs",
             data: { ...data, html },
           });
-        } catch (emailError: any) {
-          console.error(
-            "Error sending email notification:",
-            emailError.message
-          );
+        } catch (error: any) {
+          return next(new ErroHandler(error.message, 500));
         }
       }
-
-      // Response back with success
       res.status(200).json({
         success: true,
         message: "Answer added successfully and user notified if applicable",
         course,
       });
     } catch (error: any) {
-      console.error("Error in addAnswer:", error);
-      return next(new ErroHandler(error.message || "Server error", 500));
+      return next(new ErroHandler(error.message, 500));
     }
   }
 );
@@ -392,7 +402,7 @@ export const addReview = CatchAsyncError(
 
       // create notification here : ->
 
-      res.status(200).json({
+      res.status(201).json({
         success: true,
         message: "Review added successfully",
         course,
@@ -452,7 +462,6 @@ export const addReplyToReview = CatchAsyncError(
   }
 );
 
-
 // get all course -- admin
 export const getAllCourses = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -462,8 +471,7 @@ export const getAllCourses = CatchAsyncError(
       return next(new ErroHandler(error.message, 500));
     }
   }
-)
-
+);
 
 // deleting course -- admin
 export const deleteCourse = CatchAsyncError(
@@ -475,15 +483,15 @@ export const deleteCourse = CatchAsyncError(
         return next(new ErroHandler("Course not found", 404));
       }
 
-      await course.deleteOne({id});
+      await course.deleteOne({ id });
       await redis.del(id);
 
       res.status(200).json({
-        success: true,  
-        message: "Course deleted successfully",  
+        success: true,
+        message: "Course deleted successfully",
       });
     } catch (error: any) {
       return next(new ErroHandler(error.message, 400));
     }
   }
-)
+);

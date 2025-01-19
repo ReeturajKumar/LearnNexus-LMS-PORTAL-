@@ -72,6 +72,8 @@ export const registrationUser = CatchAsyncError(
   }
 );
 
+
+// genrating activation token
 interface IActivationToken {
   token: string;
   activationCode: string;

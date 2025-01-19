@@ -9,6 +9,7 @@ interface EmailOptions {
   subject: string;
   template: string;
   data: {[key: string] : any};
+  html?: string;
 }
 
 
