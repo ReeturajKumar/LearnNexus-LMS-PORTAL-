@@ -24,7 +24,7 @@ interface Layout extends Document {
   categories: Category[];
   banner: {
     image: BannerImage;
-    link: string;
+    title: string;
     subTitle: string
   }
 }

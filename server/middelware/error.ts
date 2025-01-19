@@ -7,8 +7,8 @@ export const ErrorMiddelware = (
   res: Response,
   next: NextFunction
 ) => {
-  err.statusCode = err.statusCode || 500;
-  err.message = err.message || "Interval server error";
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Interval server error";
 
   // wrong mongodb id error
   if (err.name === "CastError") {
@@ -34,8 +34,8 @@ export const ErrorMiddelware = (
     err = new ErroHandler(message, 400);
   }
 
-  res.status(err.statusCode).json({
+  res.status(statusCode).json({
     success: false,
-    message: err.message,
+    message
   });
 };
