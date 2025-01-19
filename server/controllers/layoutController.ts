@@ -86,7 +86,7 @@ export const editLayout = CatchAsyncError(
     try {
       const { type } = req.body;
       if (type === "Banner") {
-       const bannerData:any = await LayoutModel.findOne({ type: "Banner" });
+        const bannerData: any = await LayoutModel.findOne({ type: "Banner" });
 
         const { image, title, subTitle } = req.body;
         if (bannerData && bannerData.image && bannerData.image.public_id) {
@@ -107,7 +107,7 @@ export const editLayout = CatchAsyncError(
           subTitle,
         };
 
-        await LayoutModel.findByIdAndUpdate(bannerData?._id, {banner});
+        await LayoutModel.findByIdAndUpdate(bannerData?._id, { banner });
       }
 
       if (type === "FAQ") {
@@ -120,7 +120,7 @@ export const editLayout = CatchAsyncError(
               answer: item.answer,
             };
           })
-        )
+        );
         await LayoutModel.findByIdAndUpdate(FaqItem?._id, {
           type: "FAQ",
           faq: faqItems,
@@ -150,6 +150,22 @@ export const editLayout = CatchAsyncError(
       res.status(200).json({
         success: true,
         message: "Layout updated successfully",
+      });
+    } catch (error: any) {
+      return next(new ErroHandler(error.message, 500));
+    }
+  }
+);
+
+// get layout by type
+export const getLayout = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { type } = req.body;
+      const layout = await LayoutModel.findOne({ type });
+      res.status(201).json({
+        success: true,
+        layout,
       });
     } catch (error: any) {
       return next(new ErroHandler(error.message, 500));
