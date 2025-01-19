@@ -12,7 +12,7 @@ export const getNotifications = CatchAsyncError(
         createdAt: -1,
       });
 
-      res.status(201).json({
+      res.status(200).json({
         success: true,
         notifications,
       });
