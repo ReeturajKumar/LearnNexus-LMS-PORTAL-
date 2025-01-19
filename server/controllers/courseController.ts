@@ -377,7 +377,11 @@ export const addReview = CatchAsyncError(
       const { review, rating }: IAddReviewData = req.body;
 
       const reviewData: any = {
-        user: req.user,
+        user: {
+          _id: req.user?._id,
+          name: req.user?.name,
+          email: req.user?.email,
+        },
         rating,
         comment: review,
       };
@@ -395,12 +399,12 @@ export const addReview = CatchAsyncError(
 
       await course?.save();
 
-      const notification = {
+      // ✅ Create notification
+      await NotificationModel.create({
+        user: req.user?._id,
         title: "New Review Received",
         message: `${req.user?.name} has given a review in ${course?.name}`,
-      };
-
-      // create notification here : ->
+      });
 
       res.status(201).json({
         success: true,
@@ -412,6 +416,7 @@ export const addReview = CatchAsyncError(
     }
   }
 );
+
 
 //add reply in reviews
 interface IAddReviewData {
