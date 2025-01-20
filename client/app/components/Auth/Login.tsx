@@ -35,16 +35,18 @@ const Login: FC<Props> = ({ setRoute }) => {
     },
   });
 
-  const { touched, errors, values, handleChange, handleBlur, handleSubmit } = formik;
-  
+  const { touched, errors, values, handleChange, handleBlur, handleSubmit } =
+    formik;
+
   return (
     <div className="w-full">
       <h1 className={styles.title}>Login With LearnNexus</h1>
       <form onSubmit={handleSubmit} className="space-y-5">
-        
         {/* Email Input */}
         <div className="flex flex-col">
-          <label htmlFor="email" className={styles.label}>Enter your email</label>
+          <label htmlFor="email" className={styles.label}>
+            Enter your email
+          </label>
           <input
             type="email"
             name="email"
@@ -56,7 +58,11 @@ const Login: FC<Props> = ({ setRoute }) => {
             onBlur={handleBlur}
             placeholder="Enter your email"
             className={`border-2 px-3 py-2 rounded-md text-black dark:text-white bg-transparent
-              ${errors.email && touched.email ? "border-red-500" : "border-gray-300 focus:border-blue-500"}`}
+              ${
+                errors.email && touched.email
+                  ? "border-red-500"
+                  : "border-gray-300 focus:border-blue-500"
+              }`}
           />
           {errors.email && touched.email && (
             <span className="text-red-500 text-sm mt-1">{errors.email}</span>
@@ -65,7 +71,9 @@ const Login: FC<Props> = ({ setRoute }) => {
 
         {/* Password Input */}
         <div className="flex flex-col relative">
-          <label htmlFor="password" className={styles.label}>Enter your password</label>
+          <label htmlFor="password" className={styles.label}>
+            Enter your password
+          </label>
           <div className="relative">
             <input
               type={show ? "text" : "password"}
@@ -78,7 +86,11 @@ const Login: FC<Props> = ({ setRoute }) => {
               onBlur={handleBlur}
               placeholder="Enter your password"
               className={`border-2 px-3 py-2 rounded-md w-full text-black dark:text-white bg-transparent
-                ${errors.password && touched.password ? "border-red-500" : "border-gray-300 focus:border-blue-500"}`}
+                ${
+                  errors.password && touched.password
+                    ? "border-red-500"
+                    : "border-gray-300 focus:border-blue-500"
+                }`}
             />
             <button
               type="button"
@@ -86,7 +98,11 @@ const Login: FC<Props> = ({ setRoute }) => {
               onClick={() => setShow(!show)}
               aria-label="Toggle password visibility"
             >
-              {show ? <AiOutlineEye size={20} /> : <AiOutlineEyeInvisible size={20} />}
+              {show ? (
+                <AiOutlineEye size={20} />
+              ) : (
+                <AiOutlineEyeInvisible size={20} />
+              )}
             </button>
           </div>
           {errors.password && touched.password && (
@@ -96,22 +112,23 @@ const Login: FC<Props> = ({ setRoute }) => {
 
         {/* Submit Button */}
         <div className="w-full mt-4">
-          <button type="submit" className={styles.button}>Login</button>
+          <button type="submit" className={styles.button}>
+            Login
+          </button>
         </div>
 
         <h5 className="text-center pt-3 font-Poppins text-[14px] text-black dark:text-white">
           Or Join with
         </h5>
-        
+
         <div className="flex items-center justify-center space-x-4 my-2">
           <button type="button" aria-label="Login with Google">
             <FcGoogle size={30} className="cursor-pointer" />
           </button>
-          <AiFillGithub 
-  size={30} 
-  className="cursor-pointer text-black dark:text-white"
-/>
-
+          <AiFillGithub
+            size={30}
+            className="cursor-pointer text-black dark:text-white"
+          />
         </div>
 
         <h5 className="text-center pt-3 font-Poppins text-[14px] text-black dark:text-white">

@@ -1,7 +1,9 @@
 import { styles } from "@/app/styless/style";
-import React, { FC, useRef, useState } from "react";
+import { useActivationMutation } from "@/redux/features/auth/authApi";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 import { VscWorkspaceTrusted } from "react-icons/vsc";
+import { useSelector } from "react-redux";
 
 type Props = {
   setRoute: (route: string) => void;
@@ -14,7 +16,26 @@ type VerifyNumber = {
   "3": string;
 };
 const Verification: FC<Props> = ({ setRoute }) => {
+  const { token } = useSelector((state: any) => state.auth);
+  const [activation, { isSuccess, error }] = useActivationMutation();
   const [invalidError, setInvalidError] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Account Activated Successfully");
+      setRoute("Login");
+    }
+    if (error) {
+      if ("data" in error) {
+        const errordata = error as any;
+        toast.error(errordata.data.message);
+        setInvalidError(true);
+      } else {
+        toast.error("Something went wrong", error);
+      }
+    }
+  }, [isSuccess, error]);
+
   const inputRefs = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
@@ -30,7 +51,16 @@ const Verification: FC<Props> = ({ setRoute }) => {
   });
 
   const verificationHandler = async () => {
-    setInvalidError(true);
+    const verificationNumber = Object.values(verifyNumber).join("");
+
+    if (verificationNumber.length !== 4) {
+      setInvalidError(true);
+      return;
+    }
+    await activation({
+      activation_token: token,
+      activation_code: verificationNumber,
+    });
   };
 
   const handleInputChange = (index: number, value: string) => {
@@ -59,7 +89,7 @@ const Verification: FC<Props> = ({ setRoute }) => {
         {Object.keys(verifyNumber).map((key, index) => (
           <div key={index}>
             <input
-              type="number" 
+              type="number"
               key={key}
               ref={inputRefs[index]}
               className={`w-[65px] h-[65px] bg-transparent border-[3px] rounded-[10px] flex items-center text-black dark:text-white justify-center text-[18px] font-Poppins outline-none text-center ${
@@ -84,13 +114,13 @@ const Verification: FC<Props> = ({ setRoute }) => {
       </div>
       <br />
       <h5 className="text-center pt-4 font-Poppins text-[14px] text-black dark:text-white">
-        Go Back to sign in? {" "}
+        Go Back to sign in?{" "}
         <span
           className="text-blue-500 cursor-pointer"
           onClick={() => setRoute("Login")}
         >
           {" "}
-           Sign In
+          Sign In
         </span>
       </h5>
     </div>
