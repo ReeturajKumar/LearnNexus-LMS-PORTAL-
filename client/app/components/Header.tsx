@@ -4,14 +4,20 @@ import React, { FC, useEffect, useState } from "react";
 import NavItem from "../components/NavItem";
 import { ThemeSwitcher } from "../components/ThemeSwitcher";
 import { HiOutlineMenuAlt3, HiOutlineUserCircle } from "react-icons/hi";
+import CustomeModal from "../components/CustomModal"
+import Login from '../components/Auth/Login'
+import SignUp from '../components/Auth/SignUp'
+import Verification from '../components/Auth/Verification'
 
 type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
-  activateItem: number;
+  activeItem: number;
+  route: string
+  setRoute: (route: string) => void
 };
 
-const Header: FC<Props> = ({ activateItem, setOpen }) => {
+const Header: FC<Props> = ({ activeItem, setOpen, route,open,setRoute }) => {
   const [active, setActive] = useState(false);
   const [openSideBar, setOpenSideBar] = useState(false);
 
@@ -45,7 +51,7 @@ const Header: FC<Props> = ({ activateItem, setOpen }) => {
 
         {/* Navigation & Theme Switcher */}
         <div className="flex items-center">
-          <NavItem activeItem={activateItem} isMobile={false} />
+          <NavItem activeItem={activeItem} isMobile={false} />
           <ThemeSwitcher />
 
           {/* Mobile Menu Icon */}
@@ -74,7 +80,7 @@ const Header: FC<Props> = ({ activateItem, setOpen }) => {
           id="screen"
         >
           <div className="w-[70%] h-screen bg-white dark:bg-gray-900 fixed top-0 right-0 p-6">
-            <NavItem activeItem={activateItem} isMobile={true} />
+            <NavItem activeItem={activeItem} isMobile={true} />
             <HiOutlineUserCircle
               size={25}
               className="cursor-pointer mt-8 ml-5 text-black dark:text-white"
@@ -86,6 +92,63 @@ const Header: FC<Props> = ({ activateItem, setOpen }) => {
           </div>
         </div>
       )}
+
+      {
+        route === "Login" && (
+          <>
+          {
+            open && (
+              <CustomeModal
+              open={open}
+              setOpen={setOpen}
+              setRoute={setRoute}
+              activeItem={activeItem}
+              component={Login}
+              />
+            )
+          }
+          </>
+        )
+      }
+
+
+{
+        route === "Sign-up" && (
+          <>
+          {
+            open && (
+              <CustomeModal
+              open={open}
+              setOpen={setOpen}
+              setRoute={setRoute}
+              activeItem={activeItem}
+              component={SignUp}
+              />
+            )
+          }
+          </>
+        )
+      }
+
+
+
+{
+        route === "Verification" && (
+          <>
+          {
+            open && (
+              <CustomeModal
+              open={open}
+              setOpen={setOpen}
+              setRoute={setRoute}
+              activeItem={activeItem}
+              component={Verification}
+              />
+            )
+          }
+          </>
+        )
+      }
     </header>
   );
 };
