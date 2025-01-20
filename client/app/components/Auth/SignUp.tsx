@@ -47,7 +47,7 @@ const SignUp: FC<Props> = ({ setRoute }) => {
             onChange={handleChange}
             onBlur={handleBlur}
             placeholder="Enter your name"
-            className={`border-2 px-3 py-2 rounded-md bg-transparent
+            className={`border-2 px-3 py-2 rounded-md text-black dark:text-white bg-transparent
               ${errors.name && touched.name ? "border-red-500" : "border-gray-300 focus:border-blue-500"}`}
           />
           {errors.name && touched.name && (
@@ -68,7 +68,7 @@ const SignUp: FC<Props> = ({ setRoute }) => {
             onChange={handleChange}
             onBlur={handleBlur}
             placeholder="Enter your email"
-            className={`border-2 px-3 py-2 rounded-md bg-transparent
+            className={`border-2 px-3 py-2 rounded-md text-black dark:text-white bg-transparent
               ${errors.email && touched.email ? "border-red-500" : "border-gray-300 focus:border-blue-500"}`}
           />
           {errors.email && touched.email && (
@@ -90,7 +90,7 @@ const SignUp: FC<Props> = ({ setRoute }) => {
               onChange={handleChange}
               onBlur={handleBlur}
               placeholder="Enter your password"
-              className={`border-2 px-3 py-2 rounded-md w-full bg-transparent
+              className={`border-2 px-3 py-2 rounded-md w-full text-black dark:text-white bg-transparent
                 ${errors.password && touched.password ? "border-red-500" : "border-gray-300 focus:border-blue-500"}`}
             />
             <button
@@ -120,9 +120,11 @@ const SignUp: FC<Props> = ({ setRoute }) => {
           <button type="button" aria-label="Sign up with Google">
             <FcGoogle size={30} className="cursor-pointer" />
           </button>
-          <button type="button" aria-label="Sign up with GitHub">
-            <AiFillGithub size={30} className="cursor-pointer" />
-          </button>
+          <AiFillGithub 
+  size={30} 
+  className="cursor-pointer text-black dark:text-white"
+/>
+
         </div>
 
         <h5 className="text-center pt-3 font-Poppins text-[14px] text-black dark:text-white">

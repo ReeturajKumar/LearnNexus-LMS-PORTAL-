@@ -55,7 +55,7 @@ const Login: FC<Props> = ({ setRoute }) => {
             onChange={handleChange}
             onBlur={handleBlur}
             placeholder="Enter your email"
-            className={`border-2 px-3 py-2 rounded-md bg-transparent
+            className={`border-2 px-3 py-2 rounded-md text-black dark:text-white bg-transparent
               ${errors.email && touched.email ? "border-red-500" : "border-gray-300 focus:border-blue-500"}`}
           />
           {errors.email && touched.email && (
@@ -77,7 +77,7 @@ const Login: FC<Props> = ({ setRoute }) => {
               onChange={handleChange}
               onBlur={handleBlur}
               placeholder="Enter your password"
-              className={`border-2 px-3 py-2 rounded-md w-full bg-transparent
+              className={`border-2 px-3 py-2 rounded-md w-full text-black dark:text-white bg-transparent
                 ${errors.password && touched.password ? "border-red-500" : "border-gray-300 focus:border-blue-500"}`}
             />
             <button
@@ -107,9 +107,11 @@ const Login: FC<Props> = ({ setRoute }) => {
           <button type="button" aria-label="Login with Google">
             <FcGoogle size={30} className="cursor-pointer" />
           </button>
-          <button type="button" aria-label="Login with GitHub">
-            <AiFillGithub size={30} className="cursor-pointer" />
-          </button>
+          <AiFillGithub 
+  size={30} 
+  className="cursor-pointer text-black dark:text-white"
+/>
+
         </div>
 
         <h5 className="text-center pt-3 font-Poppins text-[14px] text-black dark:text-white">
