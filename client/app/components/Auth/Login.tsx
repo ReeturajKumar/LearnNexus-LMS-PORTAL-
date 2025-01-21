@@ -142,7 +142,8 @@ const Login: FC<Props> = ({ setRoute,setOpen }) => {
 
         <div className="flex items-center justify-center space-x-4 my-2">
           <button type="button" aria-label="Login with Google">
-            <FcGoogle size={30} className="cursor-pointer" />
+            <FcGoogle size={30} className="cursor-pointer" 
+            />
           </button>
           <AiFillGithub
             size={30}

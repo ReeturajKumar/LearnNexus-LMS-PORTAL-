@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import Link from "next/link";
 import React, { FC, useEffect, useState } from "react";
@@ -8,6 +9,9 @@ import CustomeModal from "../components/CustomModal"
 import Login from '../components/Auth/Login'
 import SignUp from '../components/Auth/SignUp'
 import Verification from '../components/Auth/Verification'
+import { useSelector } from "react-redux";
+import Image from "next/image";
+import avatar from "../../public/assets/avatar.webp"
 
 type Props = {
   open: boolean;
@@ -20,6 +24,7 @@ type Props = {
 const Header: FC<Props> = ({ activeItem, setOpen, route,open,setRoute }) => {
   const [active, setActive] = useState(false);
   const [openSideBar, setOpenSideBar] = useState(false);
+  const {user} = useSelector((state:any) => state.auth)
 
   useEffect(() => {
     const handleScroll = () => setActive(window.scrollY > 85);
@@ -36,6 +41,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route,open,setRoute }) => {
       setOpenSideBar(false);
     }
   };
+
 
   return (
     <header className="w-full fixed top-0 left-0 z-50 bg-white dark:bg-gray-900 transition duration-300">
@@ -64,11 +70,26 @@ const Header: FC<Props> = ({ activeItem, setOpen, route,open,setRoute }) => {
           </div>
 
           {/* User Icon */}
-          <HiOutlineUserCircle
+          {
+            user ? (
+              <Link href={"/profile"}>
+              <Image
+              src={user.avatar ? user.avatar : avatar}
+              alt="User"
+              width={30}
+              height={30}
+              className="ml-3 cursor-pointer rounded-full"
+              onClick={() => setOpen(true)}
+            />
+              </Link>
+            ) : (
+              <HiOutlineUserCircle
             size={25}
             className="ml-3 cursor-pointer dark:text-white text-black"
             onClick={() => setOpen(true)}
           />
+            )
+          }
         </div>
       </div>
 
