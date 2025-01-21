@@ -12,6 +12,7 @@ import { FcGoogle } from "react-icons/fc";
 import { styles } from "@/app/styless/style";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
+import {signIn} from "next-auth/react"
 
 type Props = {
   setRoute: (route: string) => void;
@@ -143,11 +144,13 @@ const Login: FC<Props> = ({ setRoute,setOpen }) => {
         <div className="flex items-center justify-center space-x-4 my-2">
           <button type="button" aria-label="Login with Google">
             <FcGoogle size={30} className="cursor-pointer" 
+              onClick={() => signIn("google")}
             />
           </button>
           <AiFillGithub
             size={30}
             className="cursor-pointer text-black dark:text-white"
+            onClick={() => signIn("github")}
           />
         </div>
 

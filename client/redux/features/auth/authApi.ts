@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-object-type */
+import { name } from "ejs";
 import { apiSlice } from "../api/apiSlice";
 import { userLoggedIn, userRegistration } from "./authSlice";
 
@@ -65,8 +66,29 @@ export const authApi = apiSlice.injectEndpoints({
         }
       },
     }),
+
+    socialAuth: builder.mutation({
+      query: ({ email, name, avatar }) => ({
+        url: "social-auth",
+        method: "POST",
+        body: { email, name, avatar },
+        credentials: "include" as const,
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const result = await queryFulfilled;
+
+          dispatch(userLoggedIn({
+            accessToken: result.data.activationToken,
+            user: result.data.user,
+          }));
+        } catch (error:any) {
+          console.log(error);
+        }
+      },
+    }),
   }),
 });
 
 
-export const { useRegisterMutation,useActivationMutation,useLoginMutation } = authApi;
+export const { useRegisterMutation,useActivationMutation,useLoginMutation,useSocialAuthMutation } = authApi;
