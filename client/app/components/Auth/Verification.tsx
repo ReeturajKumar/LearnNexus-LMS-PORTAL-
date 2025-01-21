@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { styles } from "@/app/styless/style";
 import { useActivationMutation } from "@/redux/features/auth/authApi";
 import React, { FC, useEffect, useRef, useState } from "react";
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { VscWorkspaceTrusted } from "react-icons/vsc";
 import { useSelector } from "react-redux";
 
@@ -22,16 +24,16 @@ const Verification: FC<Props> = ({ setRoute }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Account Activated Successfully");
+      toast.success("Account Activated Successfully!");
       setRoute("Login");
     }
     if (error) {
       if ("data" in error) {
-        const errordata = error as any;
-        toast.error(errordata.data.message);
+        const errorData = error as any;
+        toast.error(errorData.data.message);
         setInvalidError(true);
       } else {
-        toast.error("Something went wrong", error);
+        console.log("An error occurred:", error);
       }
     }
   }, [isSuccess, error]);
@@ -52,7 +54,6 @@ const Verification: FC<Props> = ({ setRoute }) => {
 
   const verificationHandler = async () => {
     const verificationNumber = Object.values(verifyNumber).join("");
-
     if (verificationNumber.length !== 4) {
       setInvalidError(true);
       return;

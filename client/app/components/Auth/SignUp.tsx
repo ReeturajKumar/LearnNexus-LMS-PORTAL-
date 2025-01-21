@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { FC, useEffect, useState, useCallback } from "react";
+import React, { FC, useState, useCallback, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -27,29 +29,34 @@ const schema = Yup.object().shape({
 
 const SignUp: FC<Props> = ({ setRoute }) => {
   const [show, setShow] = useState(false);
-  const [register, { data, error, isSuccess }] = useRegisterMutation();
+  const [register, {error, data,isSuccess }] = useRegisterMutation();
+  
+
+  useEffect(() => {
+    if (isSuccess) {
+      const message = data?.message || "Registration successful! Please check your email to activate your account.";
+      toast.success(message);
+      setRoute("Verification");
+    }
+    if (error) {
+      if("data" in error){
+        const errorData = error as any;
+        toast.error(errorData.data.message);
+      }
+    }
+  }, [isSuccess, error]);
 
   // ✅ Optimize password visibility toggle
   const togglePasswordVisibility = useCallback(() => setShow((prev) => !prev), []);
 
-  // ✅ UseEffect with improved error handling
-  useEffect(() => {
-    if (isSuccess && data) {
-      toast.success(data.message || "Account created successfully");
-      setRoute("Verification");
-    }
-    if (error) {
-      console.error("API Error:", error);
-      toast.error(error?.data?.message || "Something went wrong!");
-    }
-  }, [isSuccess, data, error, setRoute]);
 
   // ✅ Formik for form handling
   const formik = useFormik({
     initialValues: { name: "", email: "", password: "" },
     validationSchema: schema,
-    onSubmit: async (values) => {
-      await register(values);
+    onSubmit: async ({ name, email, password }) => {
+      const data = { name, email, password };
+      await register(data);
     },
   });
 

@@ -1,10 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 
 export const apiSlice = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_SERVER_URI }),
-  endpoints: (builder) => ({}), // Placeholder for future endpoints
+  baseQuery: fetchBaseQuery({
+    baseUrl: process.env.NEXT_PUBLIC_SERVER_URI,
+    credentials: 'include',
+  }),
+  endpoints: (builder) => ({}),
 });
 
-export default apiSlice;
+
+export const {} = apiSlice;
