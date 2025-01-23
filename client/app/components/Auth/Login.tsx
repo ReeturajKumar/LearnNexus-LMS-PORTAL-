@@ -25,7 +25,7 @@ const schema = Yup.object().shape({
     .required("Please enter your email!"),
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")
-    .max(15, "Password cannot exceed 15 characters")
+    .max(15, "Password must not exceed 15 characters")
     .required("Please enter your password!"),
 });
 
@@ -52,7 +52,6 @@ const Login: FC<Props> = ({ setRoute, setOpen }) => {
         toast.error(errorData.data.message);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess, error]);
 
   const { touched, errors, values, handleChange, handleBlur, handleSubmit } =

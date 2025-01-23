@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import Link from "next/link";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import NavItem from "../components/NavItem";
 import { ThemeSwitcher } from "../components/ThemeSwitcher";
 import { HiOutlineMenuAlt3, HiOutlineUserCircle } from "react-icons/hi";
@@ -12,6 +12,9 @@ import Verification from "../components/Auth/Verification";
 import { useSelector } from "react-redux";
 import Image from "next/image";
 import avatar from "../../public/assets/avatar.webp";
+import { useSession } from "next-auth/react";
+import { useSocialAuthMutation } from "@/redux/features/auth/authApi";
+import toast from "react-hot-toast";
 
 type Props = {
   open: boolean;
@@ -25,8 +28,31 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
   const [active, setActive] = useState(false);
   const [openSideBar, setOpenSideBar] = useState(false);
   const { user } = useSelector((state: any) => state.auth);
-  // const { data } = useSession();
-  // const [socialAuth, { isSuccess, error }] = useSocialAuthMutation();
+  const { data } = useSession();
+  const [socialAuth, { isSuccess, error }] = useSocialAuthMutation();
+
+
+useEffect(() => {
+  if(!user){
+    if(data){
+      socialAuth({
+        email: data?.user?.email,
+        name: data?.user?.name,
+        avatar: data?.user?.image
+      });
+    }
+  }
+  if (isSuccess) {
+    toast.success("Login successful!");
+    setOpen(false);
+  }
+  if (error) {
+    if ("data" in error) {
+      const errorData = error as any;
+      toast.error(errorData.data.message);
+    }
+  }
+}, [isSuccess, error]);
 
 
 
@@ -41,7 +67,6 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
   }
 
 
-  console.log(user);
 
   const handleClose = (e:any) => {
     if(e.target.id === "screen"){
