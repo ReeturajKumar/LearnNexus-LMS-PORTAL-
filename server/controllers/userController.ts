@@ -273,19 +273,27 @@ export const socialAuth = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, name, avatar } = req.body as ISocialAuthBody;
-      const user = await userModel.findOne({ email });
+      let user = await userModel.findOne({ email });
 
+      // If user does not exist, create a new one
       if (!user) {
-        const newUser = await userModel.create({ email, name, avatar });
-        sendToken(newUser, 200, res);
-      } else {
-        sendToken(user, 200, res);
+        user = await userModel.create({ email, name, avatar });
       }
+
+      // If user was deleted or some issue occurs, return an error
+      if (!user) {
+        return res.status(404).json({ message: "User not found. Please sign up again." });
+      }
+
+      // Send token and login user
+      sendToken(user, 200, res);
     } catch (error: any) {
-      return next(new ErroHandler(error.message, 400));
+      console.error("Social Auth Error:", error);
+      return next(new ErroHandler(error.message || "Authentication failed", 400));
     }
   }
 );
+
 
 //update user info
 

@@ -32,27 +32,26 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
   const [socialAuth, { isSuccess, error }] = useSocialAuthMutation();
 
 
-useEffect(() => {
-  if(!user){
-    if(data){
+  useEffect(() => {
+    if (!user && data) {
       socialAuth({
         email: data?.user?.email,
         name: data?.user?.name,
         avatar: data?.user?.image
       });
     }
-  }
-  if (isSuccess) {
-    toast.success("Login successful!");
-    setOpen(false);
-  }
-  if (error) {
-    if ("data" in error) {
+  
+    if (isSuccess) {
+      toast.success("Login successful!");
+      setOpen(false);
+    }
+  
+    if (error && "data" in error) {
       const errorData = error as any;
       toast.error(errorData.data.message);
     }
-  }
-}, [isSuccess, error]);
+  }, [user, data, isSuccess, error]); 
+  
 
 
 

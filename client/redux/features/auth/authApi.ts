@@ -4,6 +4,7 @@
 import { name } from "ejs";
 import { apiSlice } from "../api/apiSlice";
 import { userLoggedIn, userRegistration } from "./authSlice";
+import { accessTokenOptions } from './../../../../server/utils/jwt';
 
 
 type RegistrationResponse = {
@@ -82,7 +83,7 @@ export const authApi = apiSlice.injectEndpoints({
           const result = await queryFulfilled;
 
           dispatch(userLoggedIn({
-            accessToken: result.data.activationToken,
+            accessToken: result.data.accessToken,
             user: result.data.user,
           }));
         } catch (error:any) {
