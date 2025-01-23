@@ -11,7 +11,7 @@ interface Props {}
 
 const Page: FC<Props> = (props) => {
   const [open, setOpen] = useState(false);
-  const [activateItem, setActivateItem] = useState(0);
+  const [activeItem, setActiveItem] = useState(0);
   const [route, setRoute] = useState("Login");
   return (
     <div>
@@ -23,7 +23,7 @@ const Page: FC<Props> = (props) => {
       <Header
         open={open}
         setOpen={setOpen}
-        activeItem={activateItem}
+        activeItem={activeItem}
         setRoute={setRoute}
         route={route}
       />

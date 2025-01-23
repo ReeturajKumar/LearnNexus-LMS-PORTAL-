@@ -12,7 +12,10 @@ type RegistrationResponse = {
 };
 
 
-type RegistrationData = {};
+type RegistrationData = {
+  activation_token: string;
+  activation_code: string;
+};
 
 
 export const authApi = apiSlice.injectEndpoints({
@@ -53,12 +56,12 @@ export const authApi = apiSlice.injectEndpoints({
         body: { email, password },
         credentials: "include" as const,
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      async onQueryStarted(arg, {queryFulfilled, dispatch}) {
         try {
           const result = await queryFulfilled;
 
           dispatch(userLoggedIn({
-            accessToken: result.data.activationToken,
+            accessToken: result.data.accessToken,
             user: result.data.user,
           }));
         } catch (error:any) {

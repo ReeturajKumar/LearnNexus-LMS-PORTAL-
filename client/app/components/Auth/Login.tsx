@@ -12,7 +12,7 @@ import { FcGoogle } from "react-icons/fc";
 import { styles } from "@/app/styless/style";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
-import {signIn} from "next-auth/react"
+import { signIn } from "next-auth/react";
 
 type Props = {
   setRoute: (route: string) => void;
@@ -29,31 +29,31 @@ const schema = Yup.object().shape({
     .required("Please enter your password!"),
 });
 
-const Login: FC<Props> = ({ setRoute,setOpen }) => {
+const Login: FC<Props> = ({ setRoute, setOpen }) => {
   const [show, setShow] = useState(false);
-  const [login,{isSuccess,error}] = useLoginMutation();
+  const [login, { isSuccess, error }] = useLoginMutation();
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     validationSchema: schema,
     onSubmit: async ({ email, password }) => {
-      await login({email,password});
+      await login({ email, password });
     },
   });
-
 
   useEffect(() => {
     if (isSuccess) {
       toast.success("Login successful!");
       setOpen(false);
-    } 
+    }
     if (error) {
-      if("data" in error){
+      if ("data" in error) {
         const errorData = error as any;
         toast.error(errorData.data.message);
       }
     }
-  }, [isSuccess,error]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, error]);
 
   const { touched, errors, values, handleChange, handleBlur, handleSubmit } =
     formik;
@@ -143,7 +143,9 @@ const Login: FC<Props> = ({ setRoute,setOpen }) => {
 
         <div className="flex items-center justify-center space-x-4 my-2">
           <button type="button" aria-label="Login with Google">
-            <FcGoogle size={30} className="cursor-pointer" 
+            <FcGoogle
+              size={30}
+              className="cursor-pointer"
               onClick={() => signIn("google")}
             />
           </button>
