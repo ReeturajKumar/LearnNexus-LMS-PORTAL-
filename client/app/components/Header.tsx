@@ -123,6 +123,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
                 width={30}
                 height={30}
                 className="ml-3 cursor-pointer rounded-full w-[30px] h-[30px] object-cover"
+                style={{border: activeItem === 5 ? "2px solid #37a39a" : "none"}}
               />
             </Link>
           ) : (
