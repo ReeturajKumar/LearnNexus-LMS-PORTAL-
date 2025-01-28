@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import { name } from "ejs";
 import { apiSlice } from "../api/apiSlice";
-import { userLoggedIn, userRegistration } from "./authSlice";
-import { accessTokenOptions } from './../../../../server/utils/jwt';
+import { userLoggedIn, userLoggedOut, userRegistration } from "./authSlice";
 
 
 type RegistrationResponse = {
@@ -91,8 +89,24 @@ export const authApi = apiSlice.injectEndpoints({
         }
       },
     }),
+
+
+    logOut: builder.query({
+      query: () => ({
+        url: "logout",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          dispatch(userLoggedOut());
+        } catch (error:any) {
+          console.log(error);
+        }
+      },
+    }),
   }),
 });
 
 
-export const { useRegisterMutation,useActivationMutation,useLoginMutation,useSocialAuthMutation } = authApi;
+export const { useRegisterMutation,useActivationMutation,useLoginMutation,useSocialAuthMutation,useLogOutQuery } = authApi;

@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import Image from "next/image";
 import avatar from "../../public/assets/avatar.webp";
 import { useSession } from "next-auth/react";
-import { useSocialAuthMutation } from "@/redux/features/auth/authApi";
+import { useLogOutQuery, useSocialAuthMutation } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
 
 type Props = {
@@ -30,6 +30,10 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
   const { user } = useSelector((state: any) => state.auth);
   const { data } = useSession();
   const [socialAuth, { isSuccess, error }] = useSocialAuthMutation();
+   const [logOut, setLogOut]  = useState(false)
+    const {} = useLogOutQuery(undefined, {
+      skip: !logOut ? true : false
+    });
 
 
   useEffect(() => {
@@ -41,7 +45,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
       });
     }
   
-    if (isSuccess) {
+    if (data === null && isSuccess) {
       toast.success("Login successful!");
       setOpen(false);
     }
@@ -50,7 +54,10 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
       const errorData = error as any;
       toast.error(errorData.data.message);
     }
-  }, [user, data, isSuccess, error]); 
+    if(data === null){
+      setLogOut(true)
+    }
+  }, [user, data]); 
   
 
 
@@ -79,7 +86,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
 
 
   return (
-    <header className="w-full fixed top-0 left-0 z-50 bg-white dark:bg-gray-900 transition duration-300">
+    <div className="w-full fixed top-0 left-0 z-50 bg-white dark:bg-gray-900 transition duration-300">
       <div
         className={`w-full h-[80px] flex items-center justify-between px-6 md:px-12 lg:px-16 shadow-md ${
           active ? "shadow-lg" : ""
@@ -137,11 +144,24 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
         >
           <div className="w-[70%] h-screen bg-white dark:bg-gray-900 fixed top-0 right-0 p-6">
             <NavItem activeItem={activeItem} isMobile={true} />
+            {user ? (
+            <Link href={"/profile"}>
+             <Image
+                src={user.avatar ? user.avatar.url : avatar}
+                alt="User"
+                width={30}
+                height={30}
+                className="ml-3 cursor-pointer rounded-full w-[30px] h-[30px] object-cover"
+                onClick={() => setOpenSideBar(false)}
+              />
+            </Link>
+          ) : (
             <HiOutlineUserCircle
               size={25}
-              className="cursor-pointer mt-8 ml-5 text-black dark:text-white"
+              className="ml-3 cursor-pointer dark:text-white text-black"
               onClick={() => setOpen(true)}
             />
+          )}
             <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-8">
               © 2024 LearnNexus
             </p>
@@ -190,7 +210,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
           )}
         </>
       )}
-    </header>
+    </div>
   );
 };
 
