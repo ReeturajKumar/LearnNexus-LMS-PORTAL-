@@ -8,7 +8,6 @@ import React, { FC, useState} from 'react'
 import Protected from '../hooks/useProtexted'
 import Header from '../components/Header';
 import Heading from '../utils/Heading';
-import Profile from '../components/Profile';
 import { useSelector } from 'react-redux';
 
 type Props = {
@@ -35,7 +34,6 @@ const page: FC<Props> = (props) => {
         setRoute={setRoute}
         route={route}
       />
-      <Profile user={user}/>
       </Protected>
     </div>
   )
