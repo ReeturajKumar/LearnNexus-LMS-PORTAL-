@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Image from "next/image";
 import React, { FC } from "react";
-import avatarDefault from "../../public/assets/avatar.webp";
+import avatarDefault from "../../../public/assets/avatar.webp";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { SiCoursera } from "react-icons/si";
 import { AiOutlineLogout } from "react-icons/ai";
@@ -26,7 +26,8 @@ const SidebarProfile: FC<Props> = ({
     <div className="w-full">
       <div
         className={`w-full flex items-center px-3 py-4 cursor-pointer ${
-          active === 1 ? "dark:bg-slate-800 bg-gray-200" : "bg-transparent"
+          active === 1 ? "dark:bg-slate-800 bg-gray-200" : "bg-transparent"}
+
         }`}
         onClick={() => setActive(1)}
       >
