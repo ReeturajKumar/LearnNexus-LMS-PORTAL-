@@ -24,7 +24,7 @@ const page: FC<Props> = (props) => {
     <div>
       <Protected>
       <Heading
-        title={`${user?.name} Profile`}
+        title={`${user?.name} Profile - LearnNexus`}
         description="LearnNexus is a platform that provides a wide range of courses and resources for learning and self-improvement."
         keywords="Programming,MERN,Redux,React,Nextjs,Machine learning,Data science"
       />

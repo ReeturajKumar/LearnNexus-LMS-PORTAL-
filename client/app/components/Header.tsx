@@ -30,60 +30,63 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
   const { user } = useSelector((state: any) => state.auth);
   const { data } = useSession();
   const [socialAuth, { isSuccess, error }] = useSocialAuthMutation();
-   const [logOut, setLogOut]  = useState(false)
-    const {} = useLogOutQuery(undefined, {
-      skip: !logOut ? true : false
-    });
+  const [logOut, setLogOut] = useState(false);
+  const [prevSession, setPrevSession] = useState(data);
 
+  useLogOutQuery(undefined, {
+    skip: !logOut,
+  });
 
   useEffect(() => {
     if (!user && data) {
       socialAuth({
         email: data?.user?.email,
         name: data?.user?.name,
-        avatar: data?.user?.image
+        avatar: data?.user?.image,
       });
     }
-  
+
     if (data === null && isSuccess) {
       toast.success("Login successful!");
       setOpen(false);
     }
-  
+
     if (error && "data" in error) {
       const errorData = error as any;
       toast.error(errorData.data.message);
     }
-    if(data === null){
-      setLogOut(true)
+
+    // Only log out if session was previously present but now is null
+    if (prevSession && data === null) {
+      setLogOut(true);
     }
-  }, [user, data]); 
-  
 
+    setPrevSession(data);
+  }, [user, data, prevSession]);
 
-
-  if(typeof window !== "undefined"){
-    window.addEventListener("scroll", () => {
+  useEffect(() => {
+    const handleScroll = () => {
       if (window.scrollY > 85) {
         setActive(true);
       } else {
         setActive(false);
       }
-    });
-  }
+    };
 
+    if (typeof window !== "undefined") {
+      window.addEventListener("scroll", handleScroll);
+    }
 
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
-  const handleClose = (e:any) => {
-    if(e.target.id === "screen"){
-      {
-        setOpenSideBar(false);
-      }
+  const handleClose = (e: any) => {
+    if (e.target.id === "screen") {
+      setOpenSideBar(false);
     }
   };
-
-
-
 
   return (
     <div className="w-full fixed top-0 left-0 z-50 bg-white dark:bg-gray-900 transition duration-300">
@@ -93,10 +96,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
         } border-b border-black/20 dark:border-white/20`}
       >
         {/* Logo */}
-        <Link
-          href="/"
-          className="text-2xl font-semibold text-black dark:text-white"
-        >
+        <Link href="/" className="text-2xl font-semibold text-black dark:text-white">
           LearnNexus
         </Link>
 
@@ -117,13 +117,13 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
           {/* User Icon */}
           {user ? (
             <Link href={"/profile"}>
-             <Image
+              <Image
                 src={user.avatar ? user.avatar.url : avatar}
                 alt="User"
                 width={30}
                 height={30}
                 className="ml-3 cursor-pointer rounded-full w-[30px] h-[30px] object-cover"
-                style={{border: activeItem === 5 ? "2px solid #37a39a" : "none"}}
+                style={{ border: activeItem === 5 ? "2px solid #37a39a" : "none" }}
               />
             </Link>
           ) : (
@@ -138,78 +138,42 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
 
       {/* Sidebar */}
       {openSideBar && (
-        <div
-          className="fixed w-full h-screen top-0 left-0 z-50 bg-black/50"
-          onClick={handleClose}
-          id="screen"
-        >
+        <div className="fixed w-full h-screen top-0 left-0 z-50 bg-black/50" onClick={handleClose} id="screen">
           <div className="w-[70%] h-screen bg-white dark:bg-gray-900 fixed top-0 right-0 p-6">
             <NavItem activeItem={activeItem} isMobile={true} />
             {user ? (
-            <Link href={"/profile"}>
-             <Image
-                src={user.avatar ? user.avatar.url : avatar}
-                alt="User"
-                width={30}
-                height={30}
-                className="ml-3 cursor-pointer rounded-full w-[30px] h-[30px] object-cover"
-                onClick={() => setOpenSideBar(false)}
+              <Link href={"/profile"}>
+                <Image
+                  src={user.avatar ? user.avatar.url : avatar}
+                  alt="User"
+                  width={30}
+                  height={30}
+                  className="ml-3 cursor-pointer rounded-full w-[30px] h-[30px] object-cover"
+                  onClick={() => setOpenSideBar(false)}
+                />
+              </Link>
+            ) : (
+              <HiOutlineUserCircle
+                size={25}
+                className="ml-3 cursor-pointer dark:text-white text-black"
+                onClick={() => setOpen(true)}
               />
-            </Link>
-          ) : (
-            <HiOutlineUserCircle
-              size={25}
-              className="ml-3 cursor-pointer dark:text-white text-black"
-              onClick={() => setOpen(true)}
-            />
-          )}
-            <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-8">
-              © 2024 LearnNexus
-            </p>
+            )}
+            <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-8">© 2024 LearnNexus</p>
           </div>
         </div>
       )}
 
-      {route === "Login" && (
-        <>
-          {open && (
-            <CustomeModal
-              open={open}
-              setOpen={setOpen}
-              setRoute={setRoute}
-              activeItem={activeItem}
-              component={Login}
-            />
-          )}
-        </>
+      {route === "Login" && open && (
+        <CustomeModal open={open} setOpen={setOpen} setRoute={setRoute} activeItem={activeItem} component={Login} />
       )}
 
-      {route === "Sign-up" && (
-        <>
-          {open && (
-            <CustomeModal
-              open={open}
-              setOpen={setOpen}
-              setRoute={setRoute}
-              activeItem={activeItem}
-              component={SignUp}
-            />
-          )}
-        </>
+      {route === "Sign-up" && open && (
+        <CustomeModal open={open} setOpen={setOpen} setRoute={setRoute} activeItem={activeItem} component={SignUp} />
       )}
 
-      {route === "Verification" && (
-        <>
-          {open && (
-            <CustomeModal
-              open={open}
-              setOpen={setOpen}
-              setRoute={setRoute}
-              activeItem={activeItem}
-              component={Verification}
-            />
-          )}
-        </>
+      {route === "Verification" && open && (
+        <CustomeModal open={open} setOpen={setOpen} setRoute={setRoute} activeItem={activeItem} component={Verification} />
       )}
     </div>
   );

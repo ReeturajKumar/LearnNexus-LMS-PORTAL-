@@ -6,6 +6,8 @@ import avatarDefault from "../../../public/assets/avatar.webp";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { SiCoursera } from "react-icons/si";
 import { AiOutlineLogout } from "react-icons/ai";
+import { MdAdminPanelSettings } from "react-icons/md";
+import Link from "next/link";
 
 type Props = {
   user: any;
@@ -70,6 +72,24 @@ const SidebarProfile: FC<Props> = ({
         />
         <h5 className="pl-5 800px:block font-Poppins text-black dark:text-white ">Enrolled Courses</h5>
       </div>
+
+      {
+        user.role === "admin" && (
+          <Link
+            className={`w-full flex items-center px-3 py-4 cursor-pointer ${
+              active === 6 ? "dark:bg-slate-800 bg-gray-200" : "bg-transparent"
+            }`}
+           href= {`/admin`}
+          >
+            <MdAdminPanelSettings
+              width={40}
+              height={40}
+              className=" 800px:w-[30px] 800px:h-[30px] rounded-full w-[40px] h-[40px] object-cover text-black dark:text-white"
+            />
+            <h5 className="pl-5 800px:block font-Poppins text-black dark:text-white ">Admin Panel</h5>
+          </Link>
+        )
+      }
 
 
 
