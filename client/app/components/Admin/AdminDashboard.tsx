@@ -1,10 +1,13 @@
 import React from 'react'
+import DashBoadrdHeader from './DashBoadrdHeader'
 
 type Props = {}
 
 const AdminDashboard = (props: Props) => {
   return (
-    <div>AdminDashboard</div>
+    <div>
+      <DashBoadrdHeader/>
+    </div>
   )
 }
 
