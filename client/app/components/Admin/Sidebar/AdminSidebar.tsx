@@ -1,63 +1,48 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, MenuItem, Typography } from "@mui/material";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
-import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
-import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined";
-import LiveTvOutlinedIcon from "@mui/icons-material/LiveTvOutlined";
-import ViewQuiltOutlinedIcon from "@mui/icons-material/ViewQuiltOutlined";
-import QuizOutlinedIcon from "@mui/icons-material/QuizOutlined";
-import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
-import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
-import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined";
-import Image from "next/image";
-import Link from "next/link";
-import React, { FC, JSX, useEffect, useState } from "react";
+"use client";
+import { FC, JSX, useEffect, useState } from "react";
+import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
+import { Box, Typography, IconButton } from "@mui/material";
+import "react-pro-sidebar/dist/css/styles.css";
+import {
+  HomeOutlinedIcon,
+  ArrowForwardIosOutlinedIcon,
+  ArrowBackIosOutlinedIcon,
+  PeopleOutlineOutlinedIcon,
+  ReceiptOutlinedIcon,
+  BarChartOutlinedIcon,
+  MapOutlinedIcon,
+  GroupsIcon,
+  OndemandVideoIcon,
+  VideoCallIcon,
+  WebIcon,
+  QuizIcon,
+  WysiwygIcon,
+  ManageHistoryIcon,
+  SettingsIcon,
+  ExitToAppIcon,
+} from "./Icon";
 import { useSelector } from "react-redux";
+import Link from "next/link";
+import Image from "next/image";
+import { useTheme } from "next-themes";
+import avatarDefault from '../../../../public/assets/avatar.webp'
 
-interface ItemProps {
+interface itemProps {
   title: string;
   to: string;
   icon: JSX.Element;
   selected: string;
-  setSelected: (value: string) => void;
-  theme: string;
+  setSelected: any;
 }
 
-const Item: FC<ItemProps> = ({
-  title,
-  to,
-  icon,
-  selected,
-  setSelected,
-  theme,
-}) => {
+const Item: FC<itemProps> = ({ title, to, icon, selected, setSelected }) => {
   return (
     <MenuItem
-      className={`flex items-center px-4 py-2 rounded-md 
-        ${
-          selected === title
-            ? theme === "dark"
-              ? "bg-[#1E293B] text-white"
-              : "bg-gray-200 text-black"
-            : ""
-        } 
-        ${
-          theme === "dark"
-            ? "text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-800"
-            : "text-gray-700 hover:bg-gray-300"
-        }`}
+      active={selected === title}
       onClick={() => setSelected(title)}
+      icon={icon}
     >
-      {icon}
-      <Typography className="ml-4 text-[16px] font-poppins">
-        {title}
-      </Typography>{" "}
-      {/* Adjusted ml-3 to ml-4 */}
+      <Typography>{title}</Typography>
       <Link href={to} />
     </MenuItem>
   );
@@ -65,13 +50,14 @@ const Item: FC<ItemProps> = ({
 
 const AdminSidebar = () => {
   const { user } = useSelector((state: any) => state.auth);
+  const [logout, setLogout] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
+  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [theme, setTheme] = useState("dark");
 
   useEffect(() => {
     setMounted(true);
-    setTheme(localStorage.getItem("theme") || "dark");
   }, []);
 
   if (!mounted) {
@@ -80,218 +66,242 @@ const AdminSidebar = () => {
 
   return (
     <Box
-      className={`${
-        theme === "dark"
-          ? "bg-[#0F172A] text-gray-300"
-          : "bg-[#F8FAFC] text-black"
-      } h-[100vh] w-[18%] fixed p-4 overflow-y-auto`}
+      sx={{
+        "& .pro-sidebar-inner": {
+          background: `${
+          theme === "dark" ? "#111C43 !important" : "#fff !important"}`
+        },
+        "& .pro-icon-wrapper": {
+          backgroundColor: "transparent !important",
+        },
+        "& .pro-inner-item:hover": {
+          color: "#868dfb !important",
+        },
+        "& .pro-menu-item.active": {
+          color: "#6870fa !important",
+        },
+        "& .pro-inner-item": {
+          padding: "5px 35px 5px 20px !important",
+          opacity: 1,
+        },
+        "& .pro-menu-item": {
+          color: `${theme !== "dark" && "#000"}`
+        },
+      }}
+      className="bg-white dark:bg-[#111C43]"
     >
-      <Box textAlign="center" mt={2}>
-        <Typography
-          variant="h5"
-          className={`text-[20px] font-poppins uppercase ${
-            theme === "dark" ? "text-white" : "text-black"
-          }`}
-        >
-          LearnNexus
-        </Typography>
-        <Box mt={2}>
-          <Image
-            alt="profile-user"
-            width={80}
-            height={80}
-            src={user?.avatar ? user?.avatar.url : "/default-avatar.png"}
-            className="cursor-pointer rounded-full border-2 border-blue-500 mx-auto"
-          />
-        </Box>
-        <Typography
-          variant="h6"
-          className={`text-[18px] font-poppins mt-2 ${
-            theme === "dark" ? "text-white" : "text-black"
-          }`}
-        >
-          {user?.name}
-        </Typography>
-        <Typography
-          variant="body2"
-          className={`${
-            theme === "dark"
-              ? "text-gray-400 capitalize"
-              : "text-gray-600 capitalize"
-          }`}
-        >
-          - {user?.role}
-        </Typography>
-      </Box>
+      <ProSidebar
+        collapsed={isCollapsed}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          height: "100vh",
+          width: isCollapsed ? "0%" : "16%",
+        }}
+      >
+        <Menu iconShape="square">
+          <MenuItem
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            icon={isCollapsed ? <ArrowForwardIosOutlinedIcon /> : undefined}
+            style={{ margin: "10px 0 20px 0"}}
+          >
+            {!isCollapsed && (
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                ml="15px"
+              >
+                <Link href="/">
+                  <h3 className="text-[25px] font-Poppins uppercase dark:text-white text-black">
+                    LearnNexus
+                  </h3>
+                </Link>
+                <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
+                  <ArrowBackIosOutlinedIcon className="text-black dark:text-[#ffffffc1]" />
+                </IconButton>
+              </Box>
+            )}
+          </MenuItem>
+          {!isCollapsed && (
+            <Box mb="25px">
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <Image
+                  alt="profile-user"
+                  width={100}
+                  height={100}
+                  src={user.avatar ? user.avatar.url : avatarDefault}
+                  style={{
+                    cursor: "pointer",
+                    borderRadius: "50%",
+                    border: "3px solid #5b6fe6",
+                  }}
+                />
+              </Box>
+              <Box textAlign="center">
+                <Typography
+                  variant="h4"
+                  className="!text-[20px] text-black dark:text-[#ffffffc1]"
+                  sx={{ m: "10px 0" }}
+                >
+                  {user?.name}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  sx={{ m: "10px 0" }}
+                  className="!text-[20px] text-black dark:text-[#ffffffc1] capitalize"
+                >
+                  - {user?.role}
+                </Typography>
+              </Box>
+            </Box>
+          )}
+          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+            <Item
+              title="Dashboard"
+              to="/admin"
+              icon={<HomeOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Typography
+              variant="h5"
+              className="!text-[18px] text-black dark:text-[#ffffffc1] capitalize !font-[400]"
+              sx={{ m: "10px 0" }}
+            >
+              {!isCollapsed && "Data"}
+            </Typography>
+            <Item
+              title="Users"
+              to="/admin/users"
+              icon={<PeopleOutlineOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Invoices"
+              to="/admin/invoices"
+              icon={<ReceiptOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Typography
+              variant="h5"
+              className="!text-[18px] text-black dark:text-[#ffffffc1] capitalize !font-[400]"
+              sx={{ m: "10px 0" }}
+            >
+              {!isCollapsed && "Content"}
+            </Typography>
+            <Item
+              title="Create Course"
+              to="/admin/create-course"
+              icon={<OndemandVideoIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Live Courses"
+              to="/admin/courses"
+              icon={<VideoCallIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Typography
+              variant="h5"
+              className="!text-[18px] text-black dark:text-[#ffffffc1] capitalize !font-[400]"
+              sx={{ m: "10px 0" }}
+            >
+              {!isCollapsed && "Customization"}
+            </Typography>
+            <Item
+              title="Hero"
+              to="/admin/hero"
+              icon={<WebIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="FAQ"
+              to="/admin/faq"
+              icon={<QuizIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Categories"
+              to="/admin/categories"
+              icon={<WysiwygIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Typography
+              variant="h5"
+              className="!text-[18px] text-black dark:text-[#ffffffc1] capitalize !font-[400]"
+              sx={{ m: "10px 0" }}
+            >
+              {!isCollapsed && "Controllers"}
+            </Typography>
+            <Item
+              title="Manage Team"
+              to="/admin/manage-team"
+              icon={<GroupsIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Typography
+              variant="h5"
+              className="!text-[18px] text-black dark:text-[#ffffffc1] capitalize !font-[400]"
+              sx={{ m: "10px 0" }}
+            >
+              {!isCollapsed && "Analytics"}
+            </Typography>
+            <Item
+              title="Courses Analytics"
+              to="/admin/courses-analytics"
+              icon={<BarChartOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Orders Analytics"
+              to="/admin/orders-analytics"
+              icon={<MapOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Users Analytics"
+              to="/admin/users-analytics"
+              icon={<ManageHistoryIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
 
-      <Box className="mt-6">
-        <Item
-          title="Dashboard"
-          to="/admin"
-          icon={<HomeOutlinedIcon />}
-          selected={selected}
-          setSelected={setSelected}
-          theme={theme}
-        />
-
-        <Typography
-          variant="h6"
-          className={`mt-4 ml-5 ${
-            theme === "dark" ? "text-gray-500" : "text-gray-700"
-          }`}
-        >
-          Data
-        </Typography>
-        <Item
-          title="Users"
-          to="/admin/users"
-          icon={<PeopleOutlinedIcon />}
-          selected={selected}
-          setSelected={setSelected}
-          theme={theme}
-        />
-        <Item
-          title="Invoices"
-          to="/admin/invoices"
-          icon={<ReceiptOutlinedIcon />}
-          selected={selected}
-          setSelected={setSelected}
-          theme={theme}
-        />
-
-        <Typography
-          variant="h6"
-          className={`mt-4 ml-5 ${
-            theme === "dark" ? "text-gray-500" : "text-gray-700"
-          }`}
-        >
-          Content
-        </Typography>
-        <Item
-          title="Create Course"
-          to="/admin/create-course"
-          icon={<LibraryAddOutlinedIcon />}
-          selected={selected}
-          setSelected={setSelected}
-          theme={theme}
-        />
-        <Item
-          title="Live Courses"
-          to="/admin/live-courses"
-          icon={<LiveTvOutlinedIcon />}
-          selected={selected}
-          setSelected={setSelected}
-          theme={theme}
-        />
-
-        <Typography
-          variant="h6"
-          className={`mt-4 ml-5 ${
-            theme === "dark" ? "text-gray-500" : "text-gray-700"
-          }`}
-        >
-          Customization
-        </Typography>
-        <Item
-          title="Hero"
-          to="/admin/hero"
-          icon={<ViewQuiltOutlinedIcon />}
-          selected={selected}
-          setSelected={setSelected}
-          theme={theme}
-        />
-        <Item
-          title="FAQ"
-          to="/admin/faq"
-          icon={<QuizOutlinedIcon />}
-          selected={selected}
-          setSelected={setSelected}
-          theme={theme}
-        />
-        <Item
-          title="Categories"
-          to="/admin/categories"
-          icon={<CategoryOutlinedIcon />}
-          selected={selected}
-          setSelected={setSelected}
-          theme={theme}
-        />
-
-        <Typography
-          variant="h6"
-          className={`mt-4 ml-5 ${
-            theme === "dark" ? "text-gray-500" : "text-gray-700"
-          }`}
-        >
-          Controllers
-        </Typography>
-        <Item
-          title="Manage Team"
-          to="/admin/manage-team"
-          icon={<GroupsOutlinedIcon />}
-          selected={selected}
-          setSelected={setSelected}
-          theme={theme}
-        />
-
-        <Typography
-          variant="h6"
-          className={`mt-4 ml-5 ${
-            theme === "dark" ? "text-gray-500" : "text-gray-700"
-          }`}
-        >
-          Analytics
-        </Typography>
-        <Item
-          title="Courses Analytics"
-          to="/admin/courses-analytics"
-          icon={<BarChartOutlinedIcon />}
-          selected={selected}
-          setSelected={setSelected}
-          theme={theme}
-        />
-        <Item
-          title="Orders Analytics"
-          to="/admin/orders-analytics"
-          icon={<ShoppingCartOutlinedIcon />}
-          selected={selected}
-          setSelected={setSelected}
-          theme={theme}
-        />
-        <Item
-          title="Users Analytics"
-          to="/admin/users-analytics"
-          icon={<PersonOutlineOutlinedIcon />}
-          selected={selected}
-          setSelected={setSelected}
-          theme={theme}
-        />
-
-        <Typography
-          variant="h6"
-          className={`mt-4 ml-5 ${
-            theme === "dark" ? "text-gray-500" : "text-gray-700"
-          }`}
-        >
-          Extras
-        </Typography>
-        <Item
-          title="Settings"
-          to="/admin/settings"
-          icon={<SettingsOutlinedIcon />}
-          selected={selected}
-          setSelected={setSelected}
-          theme={theme}
-        />
-        <Item
-          title="Logout"
-          to="/logout"
-          icon={<ExitToAppOutlinedIcon />}
-          selected={selected}
-          setSelected={setSelected}
-          theme={theme}
-        />
-      </Box>
+            <Typography
+              variant="h5"
+              className="!text-[18px] text-black dark:text-[#ffffffc1] capitalize !font-[400]"
+              sx={{ m: "10px 0" }}
+            >
+              {!isCollapsed && "Extras"}
+            </Typography>
+            <Item
+              title="Settings"
+              to="/admin/settings"
+              icon={<SettingsIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Logout"
+              to="/logout"
+              icon={<ExitToAppIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+          </Box>
+        </Menu>
+      </ProSidebar>
     </Box>
   );
 };
