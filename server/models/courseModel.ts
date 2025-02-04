@@ -43,7 +43,7 @@
 //   level: string;
 //   demoUrl: string;
 //   benefits: { title: string }[];
-//   prerequisites: { title: string }[];
+//   prereqisites: { title: string }[];
 //   reviews: IReview[];
 //   courseData: ICourseData[];
 //   ratings?: number;
@@ -119,7 +119,7 @@
 //     required: true,
 //   },
 //   benefits:[{title: String}],
-//   prerequisites:[{title: String}],
+//   prereqisites:[{title: String}],
 //   reviews: [reviewSchema],
 //   courseData: [courseDataSchema],
 //   ratings: {
@@ -130,7 +130,7 @@
 //     type: Number,
 //     default: 0,
 //   },
-// });
+// } { timestamps: true } );
 
 // const CourseModel : Model<ICourse> = mongoose.model("Course", courseSchema);
 // export default CourseModel;
@@ -179,7 +179,7 @@ interface ICourse extends Document {
   level: string;
   demoUrl: string;
   benefits: { title: string }[];
-  prerequisites: { title: string }[];
+  prereqisites: { title: string }[];
   reviews: IReview[];
   courseData: ICourseData[];
   ratings?: number;
@@ -233,7 +233,7 @@ const courseSchema = new Schema<ICourse>(
     level: { type: String, required: true },
     demoUrl: { type: String, required: true },
     benefits: [{ title: String }],
-    prerequisites: [{ title: String }],
+    prereqisites: [{ title: String }],
     reviews: [reviewSchema],
     courseData: [courseDataSchema],
     ratings: { type: Number, default: 0 },

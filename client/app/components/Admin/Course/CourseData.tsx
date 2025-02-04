@@ -7,8 +7,8 @@ import toast from "react-hot-toast";
 type Props = {
   benefits: { title: string }[];
   setBenefits: (benefits: { title: string }[]) => void;
-  prerequisites: { title: string }[];
-  setPrerequisites: (prerequisites: { title: string }[]) => void;
+  prereqisites: { title: string }[];
+  setprereqisites: (prereqisites: { title: string }[]) => void;
   active: number;
   setActive: (active: number) => void;
 };
@@ -16,8 +16,8 @@ type Props = {
 const CourseData: FC<Props> = ({
   benefits,
   setBenefits,
-  prerequisites,
-  setPrerequisites,
+  prereqisites,
+  setprereqisites,
   active,
   setActive,
 }) => {
@@ -35,14 +35,14 @@ const CourseData: FC<Props> = ({
 
 
   const handlePrerequisiteChange = (index: number, value: string) => {
-    const updatedPrerequisites = [...prerequisites];
-    updatedPrerequisites[index].title = value;
-    setPrerequisites(updatedPrerequisites);
+    const updatedprereqisites = [...prereqisites];
+    updatedprereqisites[index].title = value;
+    setprereqisites(updatedprereqisites);
   }
 
 
-  const handleAddPrerequisites = () => {
-    setPrerequisites([...prerequisites, { title: "" }]);
+  const handleAddprereqisites = () => {
+    setprereqisites([...prereqisites, { title: "" }]);
   }
 
 
@@ -51,7 +51,7 @@ const CourseData: FC<Props> = ({
   }
 
   const handleOptions = () => {
-    if(benefits[benefits.length -1].title !== "" && prerequisites[prerequisites.length -1]?.title !== "") {
+    if(benefits[benefits.length -1].title !== "" && prereqisites[prereqisites.length -1]?.title !== "") {
       setActive(active + 1);
     }else {
       toast.error("Please fill all the fields")
@@ -84,22 +84,22 @@ const CourseData: FC<Props> = ({
 
       <div>
         <label className={`${styles.label} text-[20px]`}>
-          What are the prerequisites for taking this course?
+          What are the prereqisites for taking this course?
         </label>
         <br />
-        {prerequisites.map((prerequisites: any, index: number) => (
+        {prereqisites.map((prereqisites: any, index: number) => (
           <input
             type="text"
             key={index}
-            name="Prerequisites"
+            name="prereqisites"
             placeholder="You need to have basic HTML and CSS..."
             required
             className={`${styles.input} my-2`}
-            value={prerequisites.title}
+            value={prereqisites.title}
             onChange={(e) => handlePrerequisiteChange(index, e.target.value)}
           />
         ))}
-        <AddCircleIcon onClick={handleAddPrerequisites} 
+        <AddCircleIcon onClick={handleAddprereqisites} 
         style={{margin: "10px 0px", cursor: "pointer", width: "30px", height: "30px"}}
         />
       </div>
