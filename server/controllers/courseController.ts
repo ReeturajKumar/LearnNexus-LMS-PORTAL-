@@ -11,6 +11,7 @@ import path from "path";
 import sendMail from "../utils/sendMails";
 import NotificationModel from "../models/notificationModel";
 import userModel from "../models/userModel";
+import axios from 'axios';
 
 // create course
 export const uploadCourse = CatchAsyncError(
@@ -495,6 +496,31 @@ export const deleteCourse = CatchAsyncError(
         success: true,
         message: "Course deleted successfully",
       });
+    } catch (error: any) {
+      return next(new ErroHandler(error.message, 400));
+    }
+  }
+);
+
+
+// genrate video url
+export const genrateVideoUrl = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { videoId } = req.body;
+      const response = await axios.post(
+        `https://dev.vdocipher.com/api/videos/${videoId}/otp`, 
+        { ttl: 300 }, 
+        {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Apisecret ${process.env.VDOCIPHER_API_SECRET}`
+          }
+        }
+      );
+
+     res.json(response.data);
     } catch (error: any) {
       return next(new ErroHandler(error.message, 400));
     }

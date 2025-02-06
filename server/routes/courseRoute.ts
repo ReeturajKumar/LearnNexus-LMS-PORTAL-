@@ -1,5 +1,5 @@
 import express from "express";
-import { addAnswer, addQuestion, addReplyToReview, addReview, deleteCourse, editCourse, getAllCourse, getAllCourses, getCourseByUser, getSingleCourse, uploadCourse } from "../controllers/courseController";
+import { addAnswer, addQuestion, addReplyToReview, addReview, deleteCourse, editCourse, genrateVideoUrl, getAllCourse, getAllCourses, getCourseByUser, getSingleCourse, uploadCourse } from "../controllers/courseController";
 import { authorizeRoles, isAuthenticated } from "../middelware/auth";
 const courseRouter = express.Router();
 courseRouter.post(
@@ -66,6 +66,11 @@ courseRouter.get(
   isAuthenticated,
   authorizeRoles("admin"),
   getAllCourses
+);
+
+courseRouter.post(
+  "/getVdoCipherOTP",
+  genrateVideoUrl
 );
 
 courseRouter.delete(

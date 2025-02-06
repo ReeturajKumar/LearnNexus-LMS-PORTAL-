@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React, { useState } from "react";
@@ -5,7 +6,7 @@ import CourseInformation from "./CourseInformation";
 import CourseOptions from "./CourseOptions";
 import CourseData from "./CourseData";
 import CourseContent from "./CourseContent";
-
+import CoursePreview from "./CoursePreview";
 type Props = {};
 
 const CreateCourse = (props: Props) => {
@@ -49,18 +50,19 @@ const CreateCourse = (props: Props) => {
       title: prerequisite.title,
     }));
 
-    const formatedCourseContentData = courseContentData.map((courseContent) => ({
-      videoUrl: courseContent.videoUrl,
-      title: courseContent.title,
-      description: courseContent.description,
-      videoSection: courseContent.videoSection,
-      links: courseContent.links.map((link) => ({
-        title: link.title,
-        url: link.url,
-      })),
-      suggestion: courseContent.suggestion,
-    }));
-
+    const formatedCourseContentData = courseContentData.map(
+      (courseContent) => ({
+        videoUrl: courseContent.videoUrl,
+        title: courseContent.title,
+        description: courseContent.description,
+        videoSection: courseContent.videoSection,
+        links: courseContent.links.map((link) => ({
+          title: link.title,
+          url: link.url,
+        })),
+        suggestion: courseContent.suggestion,
+      })
+    );
 
     const data = {
       name: courseInfo.name,
@@ -79,8 +81,10 @@ const CreateCourse = (props: Props) => {
 
     setCourseData(data);
   };
-  console.log(courseData);
 
+  const handleCourseCreate = async (e: any) => {
+    const data = courseData;
+  };
 
   return (
     <div className="w-full flex min-h-screen">
@@ -112,6 +116,15 @@ const CreateCourse = (props: Props) => {
             courseContentData={courseContentData}
             setCourseContentData={setCourseContentData}
             handleSubmit={handleSubmit}
+          />
+        )}
+
+        {active === 3 && (
+          <CoursePreview
+            active={active}
+            setActive={setActive}
+            courseData={courseData}
+            handleCourseCreate={handleCourseCreate}
           />
         )}
       </div>
