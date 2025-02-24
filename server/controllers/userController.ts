@@ -237,10 +237,7 @@ export const updateAccessToken = CatchAsyncError(
 
 
 
-      res.status(200).json({
-        status: "success",
-        accessToken,
-      });
+     next();
     } catch (error: any) {
       return next(new ErroHandler(error.message, 400));
     }
