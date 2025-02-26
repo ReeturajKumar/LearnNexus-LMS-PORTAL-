@@ -2,41 +2,35 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import React, { useMemo } from "react";
+import React, { FC, useMemo, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Button } from "@mui/material";
-import { AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineMail } from "react-icons/ai";
 import { useTheme } from "next-themes";
 import { FiEdit } from "react-icons/fi";
-import { useGetAllCoursesQuery } from "@/redux/features/courses/coursesApi";
-import Loader from "../../Loader/Loader";
 import { format } from "timeago.js";
+import Loader from "@/app/components/Loader/Loader";
+import { useGetAllUsersQuery } from "@/redux/features/user/userApi";
+import { styles } from "@/app/styless/style";
 
-const AllCourses = () => {
+type Props = {
+  isTeam: boolean;
+};
+
+const AllUsers: FC<Props> = ({ isTeam }) => {
   const { theme } = useTheme();
-  const { isLoading, data } = useGetAllCoursesQuery({});
+  const { isLoading, data } = useGetAllUsersQuery({});
+  const {active, setActive} = useState(false);
 
   const columns = [
-    { field: "id", headerName: "ID", flex: 0.7 },
-    { field: "title", headerName: "Course Title", flex: 1 },
-    { field: "ratings", headerName: "Ratings", flex: 0.6 },
-    { field: "purchased", headerName: "Purchased", flex: 0.3 },
-    { field: "created_at", headerName: "Created At", flex: 0.3 },
+    { field: "id", headerName: "ID", flex: 0.5 },
+    { field: "name", headerName: "Name", flex: 0.2 },
+    { field: "email", headerName: "Email", flex: 0.5 },
+    { field: "role", headerName: "Role", flex: 0.2 },
+    { field: "courses", headerName: "Purchased Courses", flex: 0.3 },
+    { field: "created_at", headerName: "Joined At", flex: 0.5 },
     {
-      field: "  ",
-      headerName: "Edit",
-      flex: 0.2,
-      renderCell: () => {
-        return (
-          <>
-          <Button>
-          <FiEdit className="dark:text-white text-black" size={20} />
-        </Button></>
-        )
-      },
-    },
-    {
-      field: " ",
+      field: "",
       headerName: "Delete",
       flex: 0.2,
       renderCell: () => {
@@ -52,29 +46,63 @@ const AllCourses = () => {
         );
       },
     },
+    {
+      field: "  ",
+      headerName: "Email",
+      flex: 0.2,
+      renderCell: (params: any) => {
+        return (
+          <div className="flex pt-4">
+            <a href={`mailto:${params.row.email}`}>
+              <AiOutlineMail className="dark:text-white text-black" size={20} />
+            </a>
+          </div>
+        );
+      },
+    },
   ];
 
-  const rows = useMemo(() => {
-    return (
-      data?.courses?.map((item: any) => ({
-        id: item._id,
-        title: item.name,
-        ratings: item.ratings,
-        purchased: item.purchased,
-        created_at: format(item.createdAt),
-      })) || []
-    );
-  }, [data]);
+  const rows: any = [];
+
+  if (isTeam) {
+    const newData = data?.users?.filter((user: any) => user.role === "admin");
+    newData?.map((user: any) => {
+      rows.push({
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        courses: user.courses.length,
+        created_at: format(user.createdAt),
+      });
+    });
+  } else {
+    data?.users?.map((user: any) => {
+      rows.push({
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        courses: user.courses.length,
+        created_at: format(user.createdAt),
+      });
+    });
+  }
 
   return (
-    <div className="mt-[120px]">
+    <div className="mt-[100px]">
       {isLoading ? (
         <Loader />
       ) : (
         <Box m="20px">
+          <div className="w-full flex justify-end">
+            <div className={`${styles.button} !w-[200px] `} 
+            onClick={() => setActive(!true)}>Add new Member</div>
+          </div>
           <Box
             m="40px 0 0 0"
-            height="80vh"
+            height="calc(100vh - 200px)"
+            width="100%"
             sx={{
               "& .MuiDataGrid-root": {
                 border: "none",
@@ -132,4 +160,4 @@ const AllCourses = () => {
   );
 };
 
-export default AllCourses;
+export default AllUsers;

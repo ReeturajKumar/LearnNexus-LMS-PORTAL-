@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { FC, JSX, useEffect, useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
@@ -244,7 +246,7 @@ const AdminSidebar = () => {
             </Typography>
             <Item
               title="Manage Team"
-              to="/admin/manage-team"
+              to="/admin/team"
               icon={<GroupsIcon />}
               selected={selected}
               setSelected={setSelected}
