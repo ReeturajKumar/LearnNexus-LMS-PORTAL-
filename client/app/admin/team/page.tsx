@@ -7,7 +7,7 @@ import AdminSidebar from '@/app/components/Admin/Sidebar/AdminSidebar'
 import React from 'react'
 import Heading from '@/app/utils/Heading';
 import AdminProtected from '@/app/hooks/adminProtected';
-import AllUsers from '../../components/Admin/Course/Users/AllUsers';
+import AllUsers from '../../components/Admin/Users/AllUsers';
 
 type Props = {}
 const page = (props: Props) => {
