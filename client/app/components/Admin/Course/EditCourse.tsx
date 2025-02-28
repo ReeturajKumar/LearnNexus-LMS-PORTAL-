@@ -1,38 +1,57 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import CourseInformation from "./CourseInformation";
 import CourseOptions from "./CourseOptions";
 import CourseData from "./CourseData";
 import CourseContent from "./CourseContent";
 import CoursePreview from "./CoursePreview";
-import { useCreateCourseMutation } from "@/redux/features/courses/coursesApi";
+import { useEditCourseMutation, useGetAllCoursesQuery } from "@/redux/features/courses/coursesApi";
 import toast from "react-hot-toast";
 import { redirect } from "next/navigation";
-type Props = {};
 
-const CreateCourse = (props: Props) => {
-  const [createCourse, { isLoading, isSuccess, error }] = useCreateCourseMutation();
+type Props = {
+  id: string;
+};
+
+const EditCourse: FC<Props> = ({ id }) => {
+  const [editCourse,{isSuccess,error}] = useEditCourseMutation();
+  const {data } = useGetAllCoursesQuery(
+    {},{ refetchOnMountOrArgChange: true }
+  );
+
+  const editCourseDta = data && data.courses.find((item: any) => item._id === id);
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Course created successfully");
-      redirect("/admin/courses")
+      toast.success("Course updated successfully");
+      redirect("/admin/courses");
     }
-    if(error){
-    if("data" in error){
-      const errorMessage = error as any;
-      toast.error(errorMessage.data.message);
-    }
-  }
-  }, [isLoading,isSuccess,error])
-
-
-
+    if(error){if("data" in error){const errorMessage = error as any;toast.error(errorMessage.data.message);}}
+  }, [isSuccess, error]);
 
   const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    if (editCourseDta) {
+      setCourseInfo({
+        name: editCourseDta.name,
+        description: editCourseDta.description,
+        price: editCourseDta.price,
+        estimatedPrice: editCourseDta?.estimatedPrice,
+        tags: editCourseDta.tags,
+        level: editCourseDta.level,
+        demoUrl: editCourseDta.demoUrl,
+        thumbnail: editCourseDta?.thumbnail?.url,
+      });
+      setBenefits(editCourseDta.benefits);
+      setprereqisites(editCourseDta.prereqisites);
+      setCourseContentData(editCourseDta.courseData);
+      setCourseData(editCourseDta);
+    }
+  }, [editCourseDta]);
+
   const [courseInfo, setCourseInfo] = useState({
     name: "",
     description: "",
@@ -45,8 +64,9 @@ const CreateCourse = (props: Props) => {
   });
 
   const [benefits, setBenefits] = useState([{ id: Date.now(), title: "" }]);
-const [prereqisites, setprereqisites] = useState([{ id: Date.now(), title: "" }]);
-
+  const [prereqisites, setprereqisites] = useState([
+    { id: Date.now(), title: "" },
+  ]);
   const [courseContentData, setCourseContentData] = useState([
     {
       videoUrl: "",
@@ -64,6 +84,8 @@ const [prereqisites, setprereqisites] = useState([{ id: Date.now(), title: "" }]
   ]);
 
   const [courseData, setCourseData] = useState({});
+
+
 
   const handleSubmit = async () => {
     const formatedBenefits = benefits.map((benefit) => ({
@@ -99,7 +121,7 @@ const [prereqisites, setprereqisites] = useState([{ id: Date.now(), title: "" }]
       totalVideos: courseContentData.length,
       benefits: formatedBenefits,
       prereqisites: formatedPrereqisites,
-      courseData: formatedCourseContentData,
+      courseContent: formatedCourseContentData,
     };
 
     setCourseData(data);
@@ -107,10 +129,7 @@ const [prereqisites, setprereqisites] = useState([{ id: Date.now(), title: "" }]
 
   const handleCourseCreate = async (e: any) => {
     const data = courseData;
-
-    if(!isLoading){
-      await createCourse(data);
-    }
+    await editCourse({id:editCourseDta?._id,data});
   };
 
   return (
@@ -152,6 +171,7 @@ const [prereqisites, setprereqisites] = useState([{ id: Date.now(), title: "" }]
             setActive={setActive}
             courseData={courseData}
             handleCourseCreate={handleCourseCreate}
+            isEdit={true}
           />
         )}
       </div>
@@ -163,4 +183,4 @@ const [prereqisites, setprereqisites] = useState([{ id: Date.now(), title: "" }]
   );
 };
 
-export default CreateCourse;
+export default EditCourse;

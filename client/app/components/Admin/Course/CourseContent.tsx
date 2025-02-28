@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
 import React, { FC, useState } from "react";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
@@ -136,6 +137,7 @@ const CourseContent: FC<Props> = ({
       handleCourseSubmit();
     }
   };
+
 
   return (
     <div className="w-[80%] m-auto mt-24 p-3">

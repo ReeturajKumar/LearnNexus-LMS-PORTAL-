@@ -1,50 +1,58 @@
+'use client'
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect,use,useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Button, Modal } from "@mui/material";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useTheme } from "next-themes";
 import { FiEdit } from "react-icons/fi";
-import { useDeleteCourseMutation, useGetAllCoursesQuery } from "@/redux/features/courses/coursesApi";
+import {
+  useDeleteCourseMutation,
+  useGetAllCoursesQuery,
+} from "@/redux/features/courses/coursesApi";
 import Loader from "../../Loader/Loader";
 import { format } from "timeago.js";
 import { styles } from "@/app/styless/style";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 const AllCourses = () => {
   const { theme } = useTheme();
-  const { isLoading, data,refetch } = useGetAllCoursesQuery({},{refetchOnMountOrArgChange:true});
+  const { isLoading, data, refetch } = useGetAllCoursesQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  );
   const [open, setOpen] = useState(false);
   const [courseId, setCourseId] = useState("");
-  const [deleteCourse,{isSuccess,error}] = useDeleteCourseMutation({});
+  const [deleteCourse, { isSuccess, error }] = useDeleteCourseMutation({});
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.7 },
-    { field: "title", headerName: "Course Title", flex: 1 },
+    { field: "title", headerName: "Course Title", flex: 0.5 },
     { field: "ratings", headerName: "Ratings", flex: 0.6 },
     { field: "purchased", headerName: "Purchased", flex: 0.3 },
-    { field: "created_at", headerName: "Created At", flex: 0.3 },
+    { field: "created_at", headerName: "Created At", flex: 0.5 },
     {
       field: "  ",
       headerName: "Edit",
-      flex: 0.2,
-      renderCell: () => {
+      flex: 0.4,
+      renderCell: (params: any) => {
         return (
-          <>
-            <Button>
+          <div className="flex pt-4">
+            <Link href={`/admin/edit-course/${params.row.id}`}>
               <FiEdit className="dark:text-white text-black" size={20} />
-            </Button>
-          </>
+            </Link>
+          </div>
         );
       },
     },
     {
       field: " ",
       headerName: "Delete",
-      flex: 0.2,
+      flex: 0.4,
       renderCell: (params: any) => {
         return (
           <>
@@ -65,18 +73,19 @@ const AllCourses = () => {
     },
   ];
 
-  const rows = useMemo(() => {
-    return (
-      data?.courses?.map((item: any) => ({
-        id: item._id,
-        title: item.name,
-        ratings: item.ratings,
-        purchased: item.purchased,
-        created_at: format(item.createdAt),
-      })) || []
-    );
-  }, [data]);
-
+  const rows: any = [];
+  {
+    data &&
+      data.courses.forEach((course: any) => {
+        rows.push({
+          id: course._id,
+          title: course.name,
+          ratings: course.ratings,
+          purchased: course.purchased,
+          created_at: format(course.createdAt),
+        });
+      });
+  }
 
   useEffect(() => {
     if (isSuccess) {
@@ -84,8 +93,8 @@ const AllCourses = () => {
       toast.success("Course Deleted Successfully");
       setOpen(false);
     }
-    if(error){
-      if("data" in error){
+    if (error) {
+      if ("data" in error) {
         const errorData = error as any;
         toast.error(errorData.data.message);
       }

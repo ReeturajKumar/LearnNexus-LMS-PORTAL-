@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+'use client'
 import { styles } from "@/app/styless/style";
 import React, { FC, useState } from "react";
 
