@@ -43,38 +43,41 @@ export const editCourse = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data = req.body;
-      const thumbnail = data.thumbnail;
       const courseId = req.params.id;
-      const courseData = await CourseModel.findById(courseId) as any;
+      const courseData = (await CourseModel.findById(courseId)) as any;
 
-      if (thumbnail && !thumbnail.startsWith("https")) {
-        await cloudinary.v2.uploader.destroy(courseData.thumbnail?.public_id);
+      if (!courseData) {
+        return next(new ErroHandler("Course not found", 404));
+      }
+
+      let { thumbnail } = data;
+      if (typeof thumbnail === "string" && !thumbnail.startsWith("https")) {
+        if (courseData.thumbnail?.public_id) {
+          await cloudinary.v2.uploader.destroy(courseData.thumbnail.public_id);
+        }
 
         const myCloud = await cloudinary.v2.uploader.upload(thumbnail, {
           folder: "courses",
         });
+
         data.thumbnail = {
           public_id: myCloud.public_id,
           url: myCloud.secure_url,
         };
-      }
-
-
-      if (thumbnail.startsWith("https")) {
+      } else if (typeof thumbnail === "object" && thumbnail?.url) {
         data.thumbnail = {
-          public_id: courseData?.thumbnail.public_id,
-          url: courseData?.thumbnail.url,
+          public_id: courseData?.thumbnail?.public_id,
+          url: courseData?.thumbnail?.url,
         };
       }
+
       const course = await CourseModel.findByIdAndUpdate(
         courseId,
-        {
-          $set: data,
-        },
+        { $set: data },
         { new: true }
       );
 
-      res.status(201).json({
+      res.status(200).json({
         success: true,
         course,
       });
@@ -83,6 +86,7 @@ export const editCourse = CatchAsyncError(
     }
   }
 );
+
 
 // get single course
 export const getSingleCourse = CatchAsyncError(
