@@ -151,8 +151,7 @@ const [prereqisites, setprereqisites] = useState([{ id: Date.now(), title: "" }]
             active={active}
             setActive={setActive}
             courseData={courseData}
-            handleCourseCreate={handleCourseCreate}
-          />
+            handleCourseCreate={handleCourseCreate} isEdit={false}          />
         )}
       </div>
 

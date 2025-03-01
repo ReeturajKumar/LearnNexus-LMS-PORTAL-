@@ -3,22 +3,12 @@
 import DashboardHeader from "@/app/components/Admin/DashBoadrdHeader";
 import AdminSidebar from "@/app/components/Admin/Sidebar/AdminSidebar";
 import EditCourse from "@/app/components/Admin/Course/EditCourse";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Heading from "@/app/utils/Heading";
 
-const Page = ({ params }: { params: { id?: string } }) => {
-  const [id, setId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (params?.id) {
-      setId(params.id);
-    }
-  }, [params]);
-
-  // Prevent rendering mismatch until client-side hydration is complete
-  if (id === null) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
-  }
+const Page = ({ params }: any) => {
+  
+  const id = params?.id;
 
   return (
     <div>
