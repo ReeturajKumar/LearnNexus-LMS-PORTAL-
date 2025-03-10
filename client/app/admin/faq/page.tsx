@@ -6,7 +6,7 @@ import AdminDashboard from '@/app/components/Admin/AdminDashboard'
 import AdminSidebar from '@/app/components/Admin/Sidebar/AdminSidebar'
 import AdminProtected from '@/app/hooks/adminProtected'
 import Heading from '@/app/utils/Heading'
-import EditHero from '../../components/Admin/Hero/EditHero'
+import EditFaq from '../../components/Admin/Faq/EditFaq'
 
 type Props = {}
 
@@ -25,7 +25,7 @@ const page = (props: Props) => {
         </div>
         <div className="w-[85%]">
         <AdminDashboard/>
-        <EditHero/>
+        <EditFaq/>
         </div>
       </div>
       </AdminProtected>
