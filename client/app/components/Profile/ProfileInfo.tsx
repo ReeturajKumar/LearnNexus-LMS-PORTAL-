@@ -61,7 +61,7 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
 
   return (
     <>
-      <div className="w-full flex justify-center">
+      <div className="w-full flex items-center justify-center">
         <div className="relative">
           <Image
             src={localAvatar}

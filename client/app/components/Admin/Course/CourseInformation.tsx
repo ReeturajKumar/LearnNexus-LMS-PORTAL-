@@ -162,7 +162,7 @@ const CourseInformation: FC<Props> = ({
               placeholder="Beginner / Intermediate / Advance"
             />
           </div>
-          <div>
+          <div className="w-[48%]">
             <label className={`${styles.label} w-[50%]`}>Demo Url</label>
             <input
               type="text"
