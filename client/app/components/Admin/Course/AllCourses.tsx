@@ -107,13 +107,13 @@ const AllCourses = () => {
   };
 
   return (
-    <div className="mt-[120px]">
+    <div className="mt-[100px] ">
       {isLoading ? (
         <Loader />
       ) : (
         <Box m="20px">
           <Box
-            m="40px 0 0 0"
+            m="40px 10px 0px 0px"
             height="80vh"
             sx={{
               "& .MuiDataGrid-root": {

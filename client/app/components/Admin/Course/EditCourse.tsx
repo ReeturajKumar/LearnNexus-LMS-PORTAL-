@@ -51,6 +51,7 @@ const EditCourse = ({id}) => {
       setCourseInfo({
         name: editCourseData.name,
         description: editCourseData.description,
+        categories: editCourseData.categories,
         price: editCourseData.price,
         estimatedPrice: editCourseData.estimatedPrice,
         tags: editCourseData.tags,
@@ -73,6 +74,7 @@ const EditCourse = ({id}) => {
     estimatedPrice: "",
     tags: "",
     level: "",
+    categories: "",
     demoUrl: "",
     thumbnail: "",
   });
@@ -124,6 +126,7 @@ const [prereqisites, setprereqisites] = useState([{ id: Date.now(), title: "" }]
     const data = {
       name: courseInfo.name,
       description: courseInfo.description,
+      categories: courseInfo.categories,
       price: courseInfo.price,
       estimatedPrice: courseInfo.estimatedPrice,
       tags: courseInfo.tags,

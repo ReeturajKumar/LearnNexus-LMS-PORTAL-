@@ -40,10 +40,12 @@ const CreateCourse = (props: Props) => {
     estimatedPrice: "",
     tags: "",
     level: "",
+    categories: "",
     demoUrl: "",
     thumbnail: "",
   });
 
+  // console.log(courseInfo)
   const [benefits, setBenefits] = useState([{ id: Date.now(), title: "" }]);
 const [prereqisites, setprereqisites] = useState([{ id: Date.now(), title: "" }]);
 
@@ -53,6 +55,7 @@ const [prereqisites, setprereqisites] = useState([{ id: Date.now(), title: "" }]
       title: "",
       description: "",
       videoSection: " Untitled Section",
+      videoLength: "",
       links: [
         {
           title: "",
@@ -90,6 +93,7 @@ const [prereqisites, setprereqisites] = useState([{ id: Date.now(), title: "" }]
     const data = {
       name: courseInfo.name,
       description: courseInfo.description,
+      categories: courseInfo.categories,
       price: courseInfo.price,
       estimatedPrice: courseInfo.estimatedPrice,
       tags: courseInfo.tags,
@@ -151,7 +155,7 @@ const [prereqisites, setprereqisites] = useState([{ id: Date.now(), title: "" }]
             active={active}
             setActive={setActive}
             courseData={courseData}
-            handleCourseCreate={handleCourseCreate} isEdit={false}          />
+            handleCourseCreate={handleCourseCreate}/>
         )}
       </div>
 

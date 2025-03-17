@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client'
+"use client";
 import { styles } from "@/app/styless/style";
-import React, { FC, useState } from "react";
+import { useGetHeroDataQuery } from "@/redux/features/layout/layoutApi";
+import React, { FC, useEffect, useState } from "react";
 
 type Props = {
   courseInfo: any;
@@ -18,6 +19,16 @@ const CourseInformation: FC<Props> = ({
   setActive,
 }) => {
   const [dragging, setDragging] = useState(false);
+
+  const { data } = useGetHeroDataQuery("Categories", {});
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    if (data?.layout?.categories) {
+      setCategories(data.layout.categories);
+    }
+  }, [data]);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -129,22 +140,43 @@ const CourseInformation: FC<Props> = ({
           </div>
         </div>
         <br />
-        <div>
-          <label className={`${styles.label} `}>Course Tags</label>
-          <input
-            type="text"
-            name=""
-            required
-            value={courseInfo.tags}
-            onChange={(e: any) =>
-              setCourseInfo({ ...courseInfo, tags: e.target.value })
-            }
-            className={`${styles.input}`}
-            id="tags"
-            placeholder="MERN Stack, Nextjs, Tailwindcss"
-          />
+        <div className="w-full flex justify-between">
+          <div className="w-[45%]">
+            <label className={`${styles.label} `}>Course Tags</label>
+            <input
+              type="text"
+              name=""
+              required
+              value={courseInfo.tags}
+              onChange={(e: any) =>
+                setCourseInfo({ ...courseInfo, tags: e.target.value })
+              }
+              className={`${styles.input}`}
+              id="tags"
+              placeholder="MERN Stack, Nextjs, Tailwindcss"
+            />
+          </div>
+          <div className="w-[48%]">
+            <label className={`${styles.label} w-[50%]`}>
+              Course Categories
+            </label>
+            <select
+              name=""
+              id=""
+              className=" dark:bg-slate-950 border border-gray-300 dark:border-gray-300 text-gray-900 dark:text-white rounded-lg  block w-full p-2.5"
+              value={courseInfo.categories}
+              onChange={(e: any) =>
+                setCourseInfo({ ...courseInfo,categories : e.target.value })}
+            >
+              <option value="">Select Category</option>
+              {categories.map((category: any) => (
+                <option value={category.title} key={category._id}>
+                  {category.title}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-
         <br />
         <div className="w-full flex justify-between">
           <div className="w-[45%]">
@@ -197,24 +229,26 @@ const CourseInformation: FC<Props> = ({
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
-            {
-              courseInfo.thumbnail ? (
-                <img src={courseInfo.thumbnail} alt="" className="w-full max-h-full object-cover" />
-              ) : (
-                <span className="text-black dark:text-white">
-                  Drag and drop a file here, or click to select a file
-                </span>
-              )
-            }
+            {courseInfo.thumbnail ? (
+              <img
+                src={courseInfo.thumbnail}
+                alt=""
+                className="w-full max-h-full object-cover"
+              />
+            ) : (
+              <span className="text-black dark:text-white">
+                Drag and drop a file here, or click to select a file
+              </span>
+            )}
           </label>
         </div>
         <br />
-        <div
-          className="w-full flex justify-end items-center">
-            <input type="submit" 
+        <div className="w-full flex justify-end items-center">
+          <input
+            type="submit"
             value="Next"
             className="w-full md:w-[180px] h-[40px] bg-[#37a39a] text-center text-white rounded mt-8 cursor-pointer"
-             />
+          />
         </div>
         <br />
         <br />

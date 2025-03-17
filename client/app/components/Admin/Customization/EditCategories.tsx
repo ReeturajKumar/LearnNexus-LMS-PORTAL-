@@ -16,25 +16,25 @@ import toast from "react-hot-toast";
 type Category = {
   _id?: string;
   title: string;
-  tempId?: string;
 };
 
 const EditCategories = () => {
-  const { data, isLoading,refetch } = useGetHeroDataQuery("Categories", {
+  const { data, isLoading, refetch } = useGetHeroDataQuery("Categories", {
     refetchOnMountOrArgChange: true,
   });
 
   const [editLayout, { isSuccess: layoutSuccess, error }] =
     useEditLayoutMutation();
 
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<any>([]);
 
   useEffect(() => {
-    if (data?.layout?.categories) {
+    if (data) {
       setCategories(data.layout.categories);
     }
     if (layoutSuccess) {
-      refetch()
+      refetch();
+      toast.success("Categories updated successfully");
     }
     if (error) {
       if ("data" in error) {
@@ -42,68 +42,42 @@ const EditCategories = () => {
         toast.error(errorData?.data.message);
       }
     }
-  }, [data, error, layoutSuccess]);
+  }, [data, error, layoutSuccess, refetch]);
 
-  const handleCategoriesAdd = useCallback((id: string, value: string) => {
-    setCategories((prevCategories) =>
-      prevCategories.map((category) =>
-        category._id === id || category.tempId === id
-          ? { ...category, title: value }
-          : category
+  const handleCategoriesAdd = (id: any, value: string) => {
+    setCategories((prevCategories:any) =>
+      prevCategories.map((i:any) =>
+       i._id === id ? { ...i, title: value }
+          : i
       )
     );
-  }, []);
+  }
 
   const newCategoryHandler = () => {
-    if (
-      categories.length === 0 ||
-      categories[categories.length - 1].title.trim() !== ""
-    ) {
-      setCategories((prevCategories) => [
-        ...prevCategories,
-        { title: "", tempId: `temp-${Date.now()}` },
-      ]);
-    } else {
+    if (categories[categories.length - 1].title === "") {
       toast.error("Category title cannot be empty");
+    } else{
+      setCategories((prevCategories:any) => 
+        [...prevCategories,{ title: "", }]);
     }
   };
 
-  const handleCategoryDelete = (id?: string, tempId?: string) => {
-    if (categories.length === 1) {
-      toast.error("At least one category is required!");
-      return;
-    }
-    setCategories((prevCategories) =>
-      prevCategories.filter(
-        (category) => category._id !== id && category.tempId !== tempId
-      )
-    );
-  };
-
-  const areCategoriesUnchanged = useCallback(
-    (originalCategories: Category[], newCategories: Category[]) => {
+  const areCategoriesUnchanged =(
+    originalCategories: any[], newCategories: any[]) => {
       return (
         JSON.stringify(originalCategories) === JSON.stringify(newCategories)
       );
-    },
-    []
-  );
+  };
 
-  const isAnyCategoryEmpty = useCallback((categories: Category[]) => {
-    return categories.some((category) => category.title.trim() === "");
-  }, []);
+  const isAnyCategoryTitleEmpty = (categories: any[]) => {
+    return categories.some((q) => q.title === "");
+  };
+
 
   const handleCategoryEdit = async () => {
-    if (
-      !areCategoriesUnchanged(data?.layout?.categories || [], categories) &&
-      !isAnyCategoryEmpty(categories)
-    ) {
-      try {
-        await editLayout({ type: "Categories", categories });
-        toast.success("Categories updated successfully!");
-      } catch (err) {
-        toast.error("Failed to update categories");
-      }
+    if (!areCategoriesUnchanged(data?.layout?.categories ,categories) &&
+      !isAnyCategoryTitleEmpty(categories)) {
+      await editLayout({ type: "Categories", categories });
     }
   };
 
@@ -114,15 +88,17 @@ const EditCategories = () => {
       ) : (
         <div className="mt-[120px] text-center">
           <h1 className={styles.title}>All Categories</h1>
-          {categories.map((item, index) => (
-            <div key={item._id || item.tempId || index} className="p-3">
+          {categories.map((item: any, index: number) => {
+            return (
+              // eslint-disable-next-line react/jsx-key
+              <div className="p-3">
               <div className="flex items-center justify-center w-full">
                 <input
                   className={`${styles.input} !w-[unset] !border-none !text-[20px]`}
                   value={item.title}
                   onChange={(e) =>
                     handleCategoriesAdd(
-                      item._id || item.tempId!,
+                      item._id,
                       e.target.value
                     )
                   }
@@ -130,13 +106,19 @@ const EditCategories = () => {
                 />
                 <AiOutlineDelete
                   className="dark:text-white text-black cursor-pointer ml-2"
-                  onClick={() => handleCategoryDelete(item._id, item.tempId)}
+                  onClick={() =>{
+                    setCategories((prevCategories:any) => prevCategories.filter((i:any) => i._id !== item._id));
+                  }}
                 />
               </div>
             </div>
-          ))}
+            )
+          })}
 
-          <div className="w-full flex justify-center mt-4">
+          <br />
+          <br />
+
+          <div className="w-full flex justify-center">
             <IoMdAddCircleOutline
               className="dark:text-white text-black cursor-pointer"
               onClick={newCategoryHandler}
@@ -148,21 +130,13 @@ const EditCategories = () => {
               styles.button
             } !w-[100px] !h-[40px] mt-4 dark:text-white text-black bg-[#cccccc34]
               ${
-                areCategoriesUnchanged(
-                  data?.layout?.categories || [],
-                  categories
-                ) || isAnyCategoryEmpty(categories)
-                  ? "!cursor-not-allowed opacity-50"
+                areCategoriesUnchanged(data.layout.categories,categories) || isAnyCategoryTitleEmpty(categories)
+                  ? "!cursor-not-allowed"
                   : "!cursor-pointer bg-blue-500 hover:bg-blue-600"
               }
               !rounded absolute bottom-12 right-12`}
-            onClick={handleCategoryEdit}
-            disabled={
-              areCategoriesUnchanged(
-                data?.layout?.categories || [],
-                categories
-              ) || isAnyCategoryEmpty(categories)
-            }
+            onClick={areCategoriesUnchanged(data.layout.categories,categories) || isAnyCategoryTitleEmpty(categories) ? () => 
+              null : handleCategoryEdit}
           >
             Save
           </button>
