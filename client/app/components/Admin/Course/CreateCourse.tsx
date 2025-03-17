@@ -65,8 +65,9 @@ const [prereqisites, setprereqisites] = useState([{ id: Date.now(), title: "" }]
       suggestion: "",
     },
   ]);
-
   const [courseData, setCourseData] = useState({});
+
+  console.log(courseData)
 
   const handleSubmit = async () => {
     const formatedBenefits = benefits.map((benefit) => ({
@@ -81,6 +82,7 @@ const [prereqisites, setprereqisites] = useState([{ id: Date.now(), title: "" }]
         videoUrl: courseContent.videoUrl,
         title: courseContent.title,
         description: courseContent.description,
+        videoLength: courseContent.videoLength,
         videoSection: courseContent.videoSection,
         links: courseContent.links.map((link) => ({
           title: link.title,
