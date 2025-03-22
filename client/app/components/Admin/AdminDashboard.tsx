@@ -1,12 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import DashBoadrdHeader from './DashBoadrdHeader'
+import DashboardWidgets from "../../components/Admin/Widgets/DashboardWidgets";
 
-type Props = {}
+type Props = {
+  isDashboard?: boolean
+}
 
-const AdminDashboard = (props: Props) => {
+const AdminDashboard = ({isDashboard}: Props) => {
+  const [open, setOpen] = useState(false);
   return (
     <div>
-      <DashBoadrdHeader/>
+      <DashBoadrdHeader open={open} setOpen={setOpen}/>
+      {
+        isDashboard && (
+          <DashboardWidgets open={open}/>
+        )
+      }
     </div>
   )
 }

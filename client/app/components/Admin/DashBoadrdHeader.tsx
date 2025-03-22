@@ -1,11 +1,14 @@
-import React, { FC, useState } from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { FC} from 'react'
 import { ThemeSwitcher } from '../ThemeSwitcher'
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 
-type Props = {}
+type Props = {
+  open?: boolean;
+  setOpen?: any
+}
 
-const DashBoadrdHeader: FC<Props>= () => {
-  const [open, setOpen] = useState(false);
+const DashBoadrdHeader: FC<Props>= ({open, setOpen}) => {
   return (
     <div className='w-full flex items-center justify-end p-3 fixed top-5 right-0'>
       <ThemeSwitcher />

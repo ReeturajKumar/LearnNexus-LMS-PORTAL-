@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 import React from 'react'
 import Heading from '../utils/Heading'
@@ -21,7 +23,7 @@ const page = (props: Props) => {
         <AdminSidebar/>
         </div>
         <div className="w-[85%]">
-        <AdminDashboard/>
+        <AdminDashboard isDashboard={true}/>
         </div>
       </div>
       </AdminProtected>

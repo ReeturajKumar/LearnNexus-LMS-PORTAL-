@@ -35,7 +35,7 @@ const OrdersAnalytics = ({ isDashboard }: Props) => {
       ) : (
         <div
           className={`${
-            isDashboard ? "mt-[50px]" : "mt-[50px] shadow-sm pb-5 rounded-sm"
+            isDashboard ? "mt-[28px]" : "mt-[50px] shadow-sm pb-5 rounded-sm"
           }`}
         >
           <div className={`${isDashboard ? "ml-8 mb-5" : ""}`}>
