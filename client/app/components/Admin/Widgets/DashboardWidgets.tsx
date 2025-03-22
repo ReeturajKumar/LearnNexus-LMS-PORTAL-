@@ -101,14 +101,12 @@ const DashboardWidgets: FC<Props> = ({ open }) => {
       </div>
 
       <div className="grid grid-cols-[65%,35%] ">
-      <div className="p-8"> 
-  <OrdersAnalytics isDashboard={true} />
-</div>
-
-
+        <div className="p-8">
+          <OrdersAnalytics isDashboard={true} />
+        </div>
 
         <div className="p-5">
-          <h5 className="font-poppins dark:text-white text-black text-[24px] font-semibold">
+          <h5 className="font-poppins dark:text-white text-black text-[24px] font-semibold h-9">
             Recent Transaction
           </h5>
           <AllInvoices isDashboard={true} />

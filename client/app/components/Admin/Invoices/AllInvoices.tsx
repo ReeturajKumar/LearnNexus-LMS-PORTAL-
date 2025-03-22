@@ -112,8 +112,7 @@ const AllInvoices = ({isDashboard}: Props) => {
         ) : (
           <Box m={isDashboard ? "0" : "40px"}>
             <Box
-             m="40px 0 0 0"
-            height="calc(100vh - 200px)"
+            m="40px 0 0 0" height={isDashboard ? "300px" : "calc(100vh - 200px)"}
             width="100%"
             overflow={"hidden"}
             sx={{
