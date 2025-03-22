@@ -1,13 +1,20 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+"use client"
 import Image from 'next/image';
 import React, { FC } from 'react';
 import bannerImage from '../../public/assets/Banner.png';
 import H1 from '../../public/assets/H1.jpg';
 import H2 from '../../public/assets/H2.jpg';
 import H3 from '../../public/assets/H3.jpg';
+import { useGetHeroDataQuery } from '@/redux/features/layout/layoutApi';
 
 type Props = {};
 
 const Hero: FC<Props> = () => {
+
+    const { data} = useGetHeroDataQuery("Banner", {});
+
+
   return (
     <div className="w-full min-h-screen flex flex-col lg:flex-row items-center justify-between relative overflow-hidden px-4 sm:px-8 md:px-12 lg:px-16 lg:gap-16 xl:gap-20">
       {/* Left Section: Banner Image */}
@@ -15,7 +22,9 @@ const Hero: FC<Props> = () => {
         {/* Hero animation background */}
         <div className="hero_animation absolute w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px] rounded-full z-[-1]"></div>
         <Image
-          src={bannerImage}
+          src={data?.layout?.banner?.image?.url || bannerImage}
+          width={700}
+          height={700}
           alt="Hero"
           className="z-10 object-contain max-w-full h-auto w-[80%] sm:w-[70%] md:w-[60%] lg:w-auto"
         />
@@ -25,15 +34,14 @@ const Hero: FC<Props> = () => {
       <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left justify-center">
         <h2 className="text-[24px] sm:text-[30px] md:text-[36px] lg:text-[48px] xl:text-[60px] font-semibold leading-tight sm:leading-[40px] md:leading-[50px] lg:leading-[60px] xl:leading-[70px]">
           <span className="text-black dark:text-white">
-            Improve Your Online Learning Experience
+           {data?.layout?.banner?.title}
           </span>{' '}
           <br />
-          <span className="text-blue-500">Better Instantly</span>
+          {/* <span className="text-blue-500">Better Instantly</span> */}
         </h2>
         <p className="text-sm sm:text-base mt-3 sm:mt-4 max-w-md sm:max-w-lg">
           <span className="text-gray-700 dark:text-gray-300">
-            We have 40k+ online courses & 500k+ registered students. Find
-            your desired courses from them.
+           {data?.layout?.banner?.subTitle}
           </span>
         </p>
 
