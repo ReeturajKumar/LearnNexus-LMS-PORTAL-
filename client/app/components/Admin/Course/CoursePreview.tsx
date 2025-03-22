@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import React, { FC } from "react";
 import CoursePlayer from "../../../utils/CoursePlayer";
 import { styles } from "@/app/styless/style";

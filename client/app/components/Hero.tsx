@@ -35,9 +35,9 @@ const Hero: FC<Props> = () => {
         <h2 className="text-[24px] sm:text-[30px] md:text-[36px] lg:text-[48px] xl:text-[60px] font-semibold leading-tight sm:leading-[40px] md:leading-[50px] lg:leading-[60px] xl:leading-[70px]">
           <span className="text-black dark:text-white">
            {data?.layout?.banner?.title}
-          </span>{' '}
+          </span>{""}
           <br />
-          {/* <span className="text-blue-500">Better Instantly</span> */}
+          <span className="text-blue-500">Better Instantly</span>
         </h2>
         <p className="text-sm sm:text-base mt-3 sm:mt-4 max-w-md sm:max-w-lg">
           <span className="text-gray-700 dark:text-gray-300">

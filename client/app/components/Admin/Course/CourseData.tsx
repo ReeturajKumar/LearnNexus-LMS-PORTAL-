@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import { styles } from "@/app/styless/style";
 import React, { FC } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";

@@ -21,7 +21,6 @@ const CourseInformation: FC<Props> = ({
   const [dragging, setDragging] = useState(false);
 
   const { data } = useGetHeroDataQuery("Categories", {});
-
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -38,13 +37,9 @@ const CourseInformation: FC<Props> = ({
   const handleFileChange = (e: any) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        if (reader.readyState === 2) {
-          setCourseInfo({ ...courseInfo, thumbnail: e.target.result });
-        }
-      };
-      reader.readAsDataURL(file);
+      resizeImage(file, (resizedImage) => {
+        setCourseInfo({ ...courseInfo, thumbnail: resizedImage });
+      });
     }
   };
 
@@ -63,13 +58,35 @@ const CourseInformation: FC<Props> = ({
     setDragging(false);
     const file = e.dataTransfer.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        setCourseInfo({ ...courseInfo, thumbnail: e.target.result });
-      };
-      reader.readAsDataURL(file);
+      resizeImage(file, (resizedImage) => {
+        setCourseInfo({ ...courseInfo, thumbnail: resizedImage });
+      });
     }
   };
+
+  const resizeImage = (file: File, callback: (resizedImage: string) => void) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event: any) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        // Set canvas size to 500x300
+        canvas.width = 500;
+        canvas.height = 300;
+
+        // Draw the resized image
+        ctx.drawImage(img, 0, 0, 500, 300);
+        const resizedImage = canvas.toDataURL("image/jpeg", 0.8); // Adjust quality if needed
+        callback(resizedImage);
+      };
+    };
+  };
+
   return (
     <div className="w-[80%] m-auto mt-24">
       <form onSubmit={handleSubmit} className={`${styles.label}`}>
@@ -77,7 +94,6 @@ const CourseInformation: FC<Props> = ({
           <label htmlFor=""> Course Name</label>
           <input
             type="name"
-            name=""
             required
             value={courseInfo.name}
             onChange={(e: any) =>
@@ -89,11 +105,9 @@ const CourseInformation: FC<Props> = ({
           />
         </div>
         <br />
-        <div className="">
+        <div>
           <label className={`${styles.label}`}>Course Description</label>
           <textarea
-            name=""
-            id=""
             cols={30}
             rows={8}
             placeholder="MERN Stack LMS platform using nextjs and tailwindcss"
@@ -105,13 +119,11 @@ const CourseInformation: FC<Props> = ({
           ></textarea>
         </div>
         <br />
-
         <div className="w-full flex justify-between">
           <div className="w-[45%]">
             <label className={`${styles.label}`}>Course Price</label>
             <input
               type="number"
-              name=""
               required
               value={courseInfo.price}
               onChange={(e: any) =>
@@ -124,11 +136,10 @@ const CourseInformation: FC<Props> = ({
           </div>
           <div>
             <label className={`${styles.label} w-[50%]`}>
-              Estimeted Price (optional)
+              Estimated Price (optional)
             </label>
             <input
               type="number"
-              name=""
               value={courseInfo.estimatedPrice}
               onChange={(e: any) =>
                 setCourseInfo({ ...courseInfo, estimatedPrice: e.target.value })
@@ -145,7 +156,6 @@ const CourseInformation: FC<Props> = ({
             <label className={`${styles.label} `}>Course Tags</label>
             <input
               type="text"
-              name=""
               required
               value={courseInfo.tags}
               onChange={(e: any) =>
@@ -157,16 +167,13 @@ const CourseInformation: FC<Props> = ({
             />
           </div>
           <div className="w-[48%]">
-            <label className={`${styles.label} w-[50%]`}>
-              Course Categories
-            </label>
+            <label className={`${styles.label} w-[50%]`}>Course Categories</label>
             <select
-              name=""
-              id=""
-              className=" dark:bg-slate-950 border border-gray-300 dark:border-gray-300 text-gray-900 dark:text-white rounded-lg  block w-full p-2.5"
+              className="dark:bg-slate-950 border border-gray-300 dark:border-gray-300 text-gray-900 dark:text-white rounded-lg block w-full p-2.5"
               value={courseInfo.categories}
               onChange={(e: any) =>
-                setCourseInfo({ ...courseInfo,categories : e.target.value })}
+                setCourseInfo({ ...courseInfo, categories: e.target.value })
+              }
             >
               <option value="">Select Category</option>
               {categories.map((category: any) => (
@@ -178,48 +185,8 @@ const CourseInformation: FC<Props> = ({
           </div>
         </div>
         <br />
-        <div className="w-full flex justify-between">
-          <div className="w-[45%]">
-            <label className={`${styles.label}`}>Course Level</label>
-            <input
-              type="text"
-              name=""
-              required
-              value={courseInfo.level}
-              onChange={(e: any) =>
-                setCourseInfo({ ...courseInfo, level: e.target.value })
-              }
-              className={`${styles.input}`}
-              id="level"
-              placeholder="Beginner / Intermediate / Advance"
-            />
-          </div>
-          <div className="w-[48%]">
-            <label className={`${styles.label} w-[50%]`}>Demo Url</label>
-            <input
-              type="text"
-              name=""
-              value={courseInfo.demoUrl}
-              onChange={(e: any) =>
-                setCourseInfo({ ...courseInfo, demoUrl: e.target.value })
-              }
-              className={`${styles.input}`}
-              id="demoUrl"
-              placeholder="https://www.example.com"
-            />
-          </div>
-        </div>
-
-        <br />
         <div className="w-full">
-          <input
-            type="file"
-            accept="image/*"
-            id="file"
-            className="hidden"
-            onChange={handleFileChange}
-          />
-
+          <input type="file" accept="image/*" id="file" className="hidden" onChange={handleFileChange} />
           <label
             htmlFor="file"
             className={`w-full min-h-[10vh] dark:border-white border-[#00000026] p-3 border flex items-center justify-center ${
@@ -230,11 +197,7 @@ const CourseInformation: FC<Props> = ({
             onDrop={handleDrop}
           >
             {courseInfo.thumbnail ? (
-              <img
-                src={courseInfo.thumbnail}
-                alt=""
-                className="w-full max-h-full object-cover"
-              />
+              <img src={courseInfo.thumbnail} alt="Thumbnail" className="w-full max-h-full object-cover" />
             ) : (
               <span className="text-black dark:text-white">
                 Drag and drop a file here, or click to select a file
@@ -244,13 +207,8 @@ const CourseInformation: FC<Props> = ({
         </div>
         <br />
         <div className="w-full flex justify-end items-center">
-          <input
-            type="submit"
-            value="Next"
-            className="w-full md:w-[180px] h-[40px] bg-[#37a39a] text-center text-white rounded mt-8 cursor-pointer"
-          />
+          <input type="submit" value="Next" className="w-full md:w-[180px] h-[40px] bg-[#37a39a] text-center text-white rounded mt-8 cursor-pointer" />
         </div>
-        <br />
         <br />
       </form>
     </div>

@@ -25,10 +25,8 @@ courseRouter.get(
 );
 
 
-courseRouter.get(
-  "/get-courses",
-  getAllCourse,
-);
+courseRouter.get("/get-course",isAuthenticated, getAllCourse);
+
 
 courseRouter.get(
   "/get-admin-courses",
