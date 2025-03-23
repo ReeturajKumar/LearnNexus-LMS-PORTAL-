@@ -100,7 +100,7 @@ const EditFaq = (props: Props) => {
           {questions.map((item) => (
             <div
               key={item._id}
-              className={`$ {item._id !== questions[0]._id && "mt-8 border-t"} border-gray-200 pt-6`}
+              className={`${item._id !== questions[0]._id && "mt-8 border-t"} border-gray-200 pt-6`}
             >
               <dt className='text-lg'>
                 <button
