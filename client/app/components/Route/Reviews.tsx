@@ -16,61 +16,61 @@ type Props = {
 
 export const reviews = [
   {
-    name: "Gene Bates",
-    avatar: "https://randomuser.me/api/portraits/men/5.jpg",
+    name: "Aarav Mehta",
+    avatar: "https://randomuser.me/api/portraits/men/31.jpg",
     profession: "Student",
-    company: "Cambridge University",
+    company: "IIT Bombay",
     comment:
       "I had the pleasure of exploring LearnNexus, a website that provides an extensive range of courses on various tech-related topics. I was thoroughly impressed with my experience...",
     rating: 5,
   },
   {
-    name: "Jay Gibbs",
-    avatar: "https://randomuser.me/api/portraits/women/6.jpg",
-    profession: "Computer Systems Engineering Student",
-    company: "Zimbabwe",
+    name: "Neha Sharma",
+    avatar: "https://randomuser.me/api/portraits/women/32.jpg",
+    profession: "Computer Science Student",
+    company: "Delhi University",
     comment:
       "Thanks for your amazing programming tutorial channel! Your teaching style is outstanding, and the quality of your tutorials is top-notch...",
     rating: 4,
   },
   {
-    name: "Verna Santos",
-    avatar: "https://randomuser.me/api/portraits/women/7.jpg",
+    name: "Rohan Verma",
+    avatar: "https://randomuser.me/api/portraits/men/33.jpg",
     profession: "Full Stack Developer",
-    company: "Quarter Ltd.",
+    company: "TCS",
     comment:
       "Thanks for your amazing programming tutorial channel! Your ability to break down complex topics into manageable parts is impressive...",
     rating: 5,
   },
   {
-    name: "Mina Davidson",
-    avatar: "https://randomuser.me/api/portraits/women/8.jpg",
+    name: "Priya Iyer",
+    avatar: "https://randomuser.me/api/portraits/women/34.jpg",
     profession: "Junior Web Developer",
-    company: "Indonesia",
+    company: "Infosys",
     comment:
       "I had the pleasure of exploring LearnNexus, a website that provides an extensive range of courses on various tech-related topics...",
     rating: 4,
   },
   {
-    name: "Liam Anderson",
-    avatar: "https://randomuser.me/api/portraits/men/10.jpg",
+    name: "Vikram Singh",
+    avatar: "https://randomuser.me/api/portraits/men/35.jpg",
     profession: "Data Scientist",
-    company: "Microsoft",
+    company: "Microsoft India",
     comment:
       "The in-depth and well-structured courses at LearnNexus helped me master machine learning concepts with ease. The real-world projects were a game-changer for my career.",
     rating: 5,
   },
   {
-    name: "Emma Roberts",
-    avatar: "https://randomuser.me/api/portraits/women/15.jpg",
+    name: "Ananya Rao",
+    avatar: "https://randomuser.me/api/portraits/women/36.jpg",
     profession: "UI/UX Designer",
-    company: "Adobe",
+    company: "Adobe India",
     comment:
       "LearnNexus provided me with an amazing learning experience! The design courses were hands-on, and the mentorship helped me land my dream job in UI/UX.",
     rating: 4,
   }
-  
 ];
+
 
 const Reviews = () => {
   return (
