@@ -3,7 +3,7 @@ import React from "react";
 
 export const navItemsData = [
   { name: "Home", url: "/" },
-  { name: "Courses", url: "/courses" },
+  { name: "Courses", url: "/course" },
   { name: "About", url: "/about" },
   { name: "Policy", url: "/policy" },
   { name: "FAQ", url: "/faq" },

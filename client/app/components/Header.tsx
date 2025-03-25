@@ -62,7 +62,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
     }
 
     setPrevSession(data);
-  }, [user, data, prevSession]);
+  }, [user, data, prevSession, isSuccess, error, socialAuth, setOpen]);
 
   useEffect(() => {
     const handleScroll = () => {

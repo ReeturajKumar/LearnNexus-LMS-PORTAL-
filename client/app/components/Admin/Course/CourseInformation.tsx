@@ -185,6 +185,40 @@ const CourseInformation: FC<Props> = ({
           </div>
         </div>
         <br />
+
+        <div className="w-full flex justify-between">
+           <div className="w-[45%]">
+             <label className={`${styles.label}`}>Course Level</label>
+             <input
+               type="text"
+               name=""
+               required
+               value={courseInfo.level}
+               onChange={(e: any) =>
+                 setCourseInfo({ ...courseInfo, level: e.target.value })
+               }
+               className={`${styles.input}`}
+               id="level"
+               placeholder="Beginner / Intermediate / Advance"
+             />
+           </div>
+           <div className="w-[48%]">
+             <label className={`${styles.label} w-[50%]`}>Demo Url</label>
+             <input
+               type="text"
+               name=""
+               value={courseInfo.demoUrl}
+               onChange={(e: any) =>
+                 setCourseInfo({ ...courseInfo, demoUrl: e.target.value })
+               }
+               className={`${styles.input}`}
+               id="demoUrl"
+               placeholder="https://www.example.com"
+             />
+           </div>
+         </div>
+        <br />
+        <br />
         <div className="w-full">
           <input type="file" accept="image/*" id="file" className="hidden" onChange={handleFileChange} />
           <label

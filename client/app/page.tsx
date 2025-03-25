@@ -10,6 +10,7 @@ import Courses from './components/Route/Courses';
 import Reviews from './components/Route/Reviews';
 import FAQ from './components/Route/FAQ';
 import Footer from './components/Footer/Footer';
+import Webinars from './components/Route/Webinars';
 
 interface Props {}
 
@@ -34,6 +35,7 @@ const Page: FC<Props> = (props) => {
       <Hero/>
       <Courses/>
       <Reviews/>
+      <Webinars/>
       <FAQ/>
       <Footer/>
     </div>
