@@ -1,5 +1,4 @@
 import React from "react";
-import { Badge } from '@mui/material';
 import Link from "next/link";
 
 const webinars = [
@@ -30,27 +29,31 @@ const webinars = [
 
 const Webinars = () => {
   return (
-    <div className="w-[100%] max-w-7xl m-auto pt-10 pb-20">
+    <div className="w-full max-w-7xl mx-auto pt-10 pb-20 px-4">
       <h1 className="text-center font-poppins text-3xl lg:text-4xl font-bold tracking-tight text-white">
         Upcoming & <span className="text-blue-500">Live Webinars</span>
       </h1>
       <p className="text-center text-gray-400 mt-2">Stay ahead in tech with expert-led sessions.</p>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {webinars.map((webinar, index) => (
           <div
             key={index}
             className="bg-gray-900 p-5 rounded-lg shadow-md text-white border border-gray-700"
           >
-            <img src={webinar.image} alt={webinar.title} className="w-full h-40 object-cover rounded-md" />
-            <div className="flex justify-between items-center mt-3">
-              <h3 className="text-xl font-semibold">{webinar.title}</h3>
+            <img 
+              src={webinar.image} 
+              alt={webinar.title} 
+              className="w-full h-40 object-cover rounded-md"
+            />
+            <div className="mt-3">
+              <h3 className="text-lg sm:text-xl font-semibold">{webinar.title}</h3>
             </div>
             <p className="text-gray-400 text-sm mt-1">{webinar.source}</p>
             <p className="text-gray-400 text-sm mt-2">{webinar.description}</p>
             <Link
               href={webinar.url}
-              className="mt-4 inline-block w-full text-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+              className="mt-4 block text-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
             >
               Join Now
             </Link>
