@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react'
 import Loader from '../../Loader/Loader'
 import { format } from 'timeago.js'
 import { AiOutlineMail } from 'react-icons/ai'
-import { useGetOrdersQuery } from '@/redux/features/orders/ordersApi'
+import { useGetOrderQuery } from '@/redux/features/orders/ordersApi'
 import { useGetAllUsersQuery } from '@/redux/features/user/userApi'
 
 
@@ -20,7 +20,7 @@ type Props = {
 
 const AllInvoices = ({isDashboard}: Props) => {
   const {theme,setTheme} = useTheme()
-  const {isLoading,data} = useGetOrdersQuery({});
+  const {isLoading,data} = useGetOrderQuery({});
   const {data:userData} = useGetAllUsersQuery({});
   const {data:courseData} = useGetAllCoursesQuery({});
 

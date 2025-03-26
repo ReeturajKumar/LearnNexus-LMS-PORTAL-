@@ -22,7 +22,7 @@ const CoursePlayer: FC<Props> = ({ videoUrl }) => {
       });
   }, [videoUrl]);
   return (
-    <div style={{ paddingTop: "41%", position: "relative" }}>
+    <div style={{position: "relative", paddingTop: "56.25%", overflow: "hidden"}}>
       {videoData.otp && videoData.playbackInfo !== "" && (
         <iframe
           src={`https://player.vdocipher.com/v2/?otp=${videoData.otp}&playbackInfo=${videoData.playbackInfo}&player=d6LENMsUqymMAtoR`}
@@ -30,9 +30,9 @@ const CoursePlayer: FC<Props> = ({ videoUrl }) => {
             position: "absolute",
             top: 0,
             left: 0,
-            width: "90%",
+            width: "100%",
             height: "100%",
-            border: "none",
+            border: "0",
           }}
           allowFullScreen={true}
           allow="encrypted-media"

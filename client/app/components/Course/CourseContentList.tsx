@@ -29,7 +29,7 @@ const CourseContentList: FC<Props> = (props) => {
   };
 
   return (
-    <div className={`mt-6 w-full ${props.isDemo ? 'ml-[-30px] sticky top-24 left-0 z-30' : 'px-6'}`}>
+    <div className={`mt-6 w-full ${props.isDemo ? 'ml-[-30px] sticky top-24 left-0 z-30' : ''}`}>
       {videoSections.map((section: string, sectionIndex: number) => {
         const isSectionVisible = visibleSection.has(section);
         const sectionVideos: any[] = props.data.filter((item: any) => item.videoSection === section);
