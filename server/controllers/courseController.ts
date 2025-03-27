@@ -144,15 +144,10 @@ export const getCourseByUser = CatchAsyncError(
       const userCourseList = req.user?.courses;
       const courseId = req.params.id;
 
-      console.log("User's courses: ", userCourseList); // Debugging log
-      console.log("Requested Course ID: ", courseId); // Debugging log
-
       // Ensure we're comparing ObjectId to ObjectId or string to string
       const courseExist = userCourseList?.some(
         (course: any) => course._id.toString() === courseId
       );
-
-      console.log("Does course exist in user's list? ", courseExist); // Debugging log
 
       if (!courseExist) {
         return next(
@@ -228,6 +223,7 @@ export const addQuestion = CatchAsyncError(
           _id: req.user._id,
           name: req.user.name,
           email: req.user.email,
+          avatar: req.user.avatar.url,
         },
         question,
       };
@@ -273,7 +269,6 @@ export const addAnswer = CatchAsyncError(
 
       const course = await CourseModel.findById(courseId);
       if (!mongoose.Types.ObjectId.isValid(courseId)) {
-        console.log("Invalid courseId:", courseId);
         return next(new ErroHandler("Invalid course ID", 400));
       }
 

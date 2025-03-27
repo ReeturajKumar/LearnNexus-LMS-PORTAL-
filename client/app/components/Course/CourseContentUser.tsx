@@ -13,7 +13,7 @@ type Props = {
 };
 
 const CourseContentUser = ({ id,user }: Props) => {
-  const { data: contentData, isLoading } = useGetCourseContentUserQuery(id);
+  const { data: contentData, isLoading,refetch } = useGetCourseContentUserQuery(id,{refetchOnMountOrArgChange:true});
   const [open, setOpen] = useState(false);
   const [route, setRoute] = useState('Login');
   const data = contentData?.content;
@@ -39,7 +39,7 @@ const CourseContentUser = ({ id,user }: Props) => {
                 description="LearnNexus is a platform that provides a wide range of courses and resources for learning and self-improvement."
                 keywords={data[activeVideo]?.tags}
               />
-              <CourseContentMedia data={data} id={id} activeVideo={activeVideo} setActiveVideo={setActiveVideo} user={user} />
+              <CourseContentMedia data={data} id={id} activeVideo={activeVideo} setActiveVideo={setActiveVideo} user={user} refetch={refetch} />
             </div>
 
             {/* Right: Course Content List (30%) - Compact & Professional */}

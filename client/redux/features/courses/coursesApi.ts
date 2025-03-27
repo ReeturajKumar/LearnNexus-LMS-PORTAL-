@@ -12,11 +12,11 @@ export const coursesApi = apiSlice.injectEndpoints({
     }),
 
     getAllCourses: builder.query({
-     query: () => ({
-      url: "get-admin-courses",
-      method: "GET",
-      credentials: "include" as const,
-     })
+      query: () => ({
+        url: "get-admin-courses",
+        method: "GET",
+        credentials: "include" as const,
+      }),
     }),
 
     deleteCourse: builder.mutation({
@@ -27,9 +27,8 @@ export const coursesApi = apiSlice.injectEndpoints({
       }),
     }),
 
-
     editCourse: builder.mutation({
-      query: ({id,data}) => ({
+      query: ({ id, data }) => ({
         url: `edit-course/${id}`,
         method: "PUT",
         body: data,
@@ -37,25 +36,20 @@ export const coursesApi = apiSlice.injectEndpoints({
       }),
     }),
 
-
     getAlllUserCourses: builder.query({
       query: () => ({
         url: "get-course",
         method: "GET",
         credentials: "include",
-      })
-      
+      }),
     }),
 
-
-
-    
     getCourseDetails: builder.query({
       query: (id) => ({
         url: `get-course/${id}`,
         method: "GET",
         credentials: "include",
-      }) 
+      }),
     }),
 
     getCourseContentUser: builder.query({
@@ -63,10 +57,27 @@ export const coursesApi = apiSlice.injectEndpoints({
         url: `get-course-content/${id}`,
         method: "GET",
         credentials: "include",
-      }) 
+      }),
     }),
-    
-  }),
-})
 
-export const {useCreateCourseMutation, useGetAllCoursesQuery,useDeleteCourseMutation,useEditCourseMutation, useGetAlllUserCoursesQuery,useGetCourseDetailsQuery,useGetCourseContentUserQuery} = coursesApi;
+    addNewQuestion: builder.mutation({
+      query: ({ question, courseId, contentId }) => ({
+        url: `add-question`,
+        method: "PUT",
+        body: { question, courseId, contentId },
+        credentials: "include" as const,
+      }),
+    }),
+  }),
+});
+
+export const {
+  useCreateCourseMutation,
+  useGetAllCoursesQuery,
+  useDeleteCourseMutation,
+  useEditCourseMutation,
+  useGetAlllUserCoursesQuery,
+  useGetCourseDetailsQuery,
+  useGetCourseContentUserQuery,
+  useAddNewQuestionMutation,
+} = coursesApi;

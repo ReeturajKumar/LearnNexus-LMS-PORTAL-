@@ -189,14 +189,14 @@ interface ICourse extends Document {
 }
 
 const reviewSchema = new Schema<IReview>({
-  user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  user: Object,
   rating: {
     type: Number,
     default: 0,
   },
   comment: String,
   commentReplies: [Object],
-});
+}, { timestamps: true });
 
 const linkSchema = new Schema<ILink>({
   title: String,
@@ -204,10 +204,10 @@ const linkSchema = new Schema<ILink>({
 });
 
 const commentSchema = new Schema<IComment>({
-  user: { type: Schema.Types.ObjectId, ref: "User", required: true }, 
+  user: Object, 
   question: String,
   questionReplies: [Object],
-});
+}, { timestamps: true });
 
 const courseDataSchema = new Schema<ICourseData>({
   videoUrl: String,
