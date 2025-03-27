@@ -218,7 +218,7 @@ const courseDataSchema = new Schema<ICourseData>({
   videoPlayer: String,
   links: [linkSchema],
   questions: [commentSchema],
-});
+}, { timestamps: true });
 
 const courseSchema = new Schema<ICourse>(
   {

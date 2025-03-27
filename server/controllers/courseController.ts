@@ -290,7 +290,7 @@ export const addAnswer = CatchAsyncError(
       }
 
       // Add the answer to the question
-      const newAnswer: any = { user: req.user, answer };
+      const newAnswer: any = { user: req.user, answer,createdAt: new Date() };
       question.questionReplies.push(newAnswer);
 
       await course?.save();
@@ -316,6 +316,7 @@ export const addAnswer = CatchAsyncError(
         const data = {
           name: questionUser.name,
           title: courseContent.title,
+          avatar: questionUser.avatar.url,
         };
 
         const html = await ejs.renderFile(
