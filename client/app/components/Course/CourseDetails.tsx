@@ -19,6 +19,8 @@ import CourseContentList from "../Course/CourseContentList";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "../Payments/CheckoutForm";
 import { useLoadeUserQuery } from "@/redux/features/api/apiSlice";
+import Image from "next/image";
+import avatar from "../../../public/assets/avatar.webp";
 
 type Props = {
   data: any;
@@ -27,7 +29,7 @@ type Props = {
 };
 
 const CourseDetails = ({ data, stripePromise, clientSecret }: Props) => {
-  const { data:userData } = useLoadeUserQuery(undefined, {});
+  const { data: userData } = useLoadeUserQuery(undefined, {});
   const user = userData?.user;
   const [open, setOpen] = useState(false);
 
@@ -127,50 +129,54 @@ const CourseDetails = ({ data, stripePromise, clientSecret }: Props) => {
               <div className="flex items-center gap-2">
                 {" "}
                 {/* Ensures everything is inline */}
-                <Ratings rating={data?.ratings} />
-                <h5 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
-                  {Number.isInteger(data?.ratings)
-                    ? data?.ratings.toFixed(1)
-                    : data?.ratings.toFixed(2)}{" "}
-                  | Course Rating ({data?.reviews?.length} Reviews)
+                <h5 className="text-2xl font-semibold font-poppins text-black dark:text-white flex items-center gap-2">
+                  {data?.ratings?.toFixed(1)}
+                  <Ratings rating={data?.ratings} />
+                  <span className="text-gray-500 dark:text-gray-400 text-lg">
+                    | Course Rating ({data?.reviews?.length} Reviews)
+                  </span>
                 </h5>
               </div>
               <br />
               <br />
-              {(data?.reviews && [...data.reviews].reverse()).map(
-                (item: any, index: number) => (
-                  <div className="w-full pb-4" key={index}>
-                    <div className="flex">
-                      <div className="w-[50px] h-[50px] bg-slate-600 rounded-[50px] flex items-center justify-center cursor-pointer">
-                        <h1 className="text-[25px] font-Poppins font-[600] text-white">
-                          {item?.user?.name.slice(0, 2)}
-                        </h1>
+              {data?.reviews &&
+                [...data.reviews].reverse().map((item: any, index: number) => (
+                  <div
+                    className="w-full pb-6"
+                    key={index}
+                  >
+                    <div className="flex items-center gap-4">
+                      {/* User Avatar */}
+                      <div className="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center cursor-pointer">
+                        <Image
+                          src={item?.user?.avatar?.url || avatar}
+                          alt={item?.user?.name}
+                          width={50}
+                          height={50}
+                          className="w-12 h-12 rounded-full object-cover"
+                        />
                       </div>
-                    </div>
-                    <div className="hidden 800px:block pl-2">
-                      <div className="flex items-center">
-                        <h5 className="text-[18px] pr-2 text-black dark:text-white">
-                          {" "}
+
+                      {/* User Name & Rating */}
+                      <div>
+                        <h5 className="text-lg font-semibold text-black dark:text-white">
                           {item?.user?.name}
                         </h5>
                         <Ratings rating={item.rating} />
                       </div>
-                      <p className="text-black dark:text-white">
+                    </div>
+
+                    {/* Review Content */}
+                    <div className="mt-2 ml-16">
+                      <p className="text-gray-700 dark:text-gray-300">
                         {item.comment}
                       </p>
-                      <small className="text-black dark:text-white">
+                      <small className="text-gray-500 dark:text-gray-400">
                         {format(item.createdAt)}
                       </small>
                     </div>
-                    <div className="pl-2">
-                      <h5 className="text-[18px] text-black dark:text-white">
-                        {item.user.name}
-                      </h5>
-                      <Ratings rating={item.rating} />
-                    </div>
                   </div>
-                )
-              )}
+                ))}
             </div>
           </div>
 
@@ -203,7 +209,7 @@ const CourseDetails = ({ data, stripePromise, clientSecret }: Props) => {
               <div className="flex items-center">
                 {isPurchased ? (
                   <Link
-                    className={`${styles.button} !w-[180px] my-3 font-poppins cursor-pointer !bg-[crimson]`}
+                    className={`${styles.button} !w-[180px] my-3 font-poppins cursor-pointer !bg-[crimson] text-white`}
                     href={`/course-access/${data._id}`}
                   >
                     Go To Course

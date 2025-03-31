@@ -7,6 +7,8 @@ import CoursePlayer from "@/app/utils/CoursePlayer";
 import {
   useAddAnswerInQuestionMutation,
   useAddNewQuestionMutation,
+  useAddReviewInCourseMutation,
+  useGetCourseDetailsQuery,
 } from "@/redux/features/courses/coursesApi";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,6 +23,7 @@ import {
 import { BiMessage } from "react-icons/bi";
 import { format } from "timeago.js";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
+import Ratings from "@/app/utils/Ratings";
 
 type Props = {
   data: any;
@@ -45,6 +48,8 @@ const CourseContentMedia = ({
   const [rating, setRating] = useState(0);
   const [answer, setAnswer] = useState("");
   const [questionId, setQuestionId] = useState("");
+
+  const {data:courseData,refetch:courseRefetch} = useGetCourseDetailsQuery(id,{refetchOnMountOrArgChange:true});
   const [
     addNewQuestion,
     { isLoading: questionCreationLoading, isSuccess, error },
@@ -57,7 +62,17 @@ const CourseContentMedia = ({
       isLoading: answerCreateLoading,
     },
   ] = useAddAnswerInQuestionMutation();
-  const isReviewExists = data?.reviews?.find(
+
+  const course = courseData?.course;
+  const [
+    addReviewInCourse,
+    {
+      isSuccess: reviewSuccess,
+      error: reviewError,
+      isLoading: reviewCreateLoading,
+    },
+  ] = useAddReviewInCourseMutation();
+  const isReviewExists = course?.reviews?.find(
     (item: any) => item.user._id === user._id
   );
 
@@ -97,7 +112,18 @@ const CourseContentMedia = ({
         }
       }
     }
-  }, [answerError, answerSuccess, error, isSuccess, refetch]);
+    if (reviewSuccess) {
+      setReview("");
+      courseRefetch();
+      toast.success("Review Added Successfully");
+    }
+    if (reviewError) {
+      if ("data" in reviewError) {
+        const errorMessage = reviewError.data as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
+  }, [answerError, answerSuccess, courseRefetch, error, isSuccess, refetch, reviewError, reviewSuccess]);
 
   const handleAnswerSubmit = () => {
     addAnswerInQuestion({
@@ -107,7 +133,19 @@ const CourseContentMedia = ({
       contentId: data[activeVideo]._id,
     });
   };
-  console.log(questionId);
+
+  const handleReviewSubmit = () => {
+    if (review.length === 0) {
+      toast.error("Review cannot be empty");
+    } else {
+      addReviewInCourse({
+        review,
+        courseId: id,
+        rating,
+      });
+    }
+  };
+
   return (
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
       {/* Video Player */}
@@ -302,12 +340,63 @@ const CourseContentMedia = ({
 
                 {/* Submit Button */}
                 <div className="flex justify-end">
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg text-lg transition-all duration-200">
+                  <button
+                    className={
+                      `
+                    bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg text-lg transition-all duration-200 ` +
+                      (reviewCreateLoading && "cursor-no-drop")
+                    }
+                    onClick={
+                      reviewCreateLoading ? () => {} : handleReviewSubmit
+                    }
+                  >
                     Submit
                   </button>
                 </div>
               </div>
             )}
+            <br />
+            <div className="w-full h-[1px] bg-[#ffffff3b] mb-5"></div>
+            <div className="w-full">
+              {course?.reviews &&
+                [...course.reviews].reverse().map((item: any, index: number) => (
+                  <div className="flex mb-2">
+                    <div className="w-[50px] h-[50px]">
+                      {item?.user?.avatar ? (
+                        <Image
+                          src={
+                            item.user.avatar
+                              ? item.user.avatar.url
+                              : "https:res.cloudinary.com/dm0q4cetx/image/upload/v1688005004/avatar_1_q8q7l4.png"
+                          }
+                          alt={item?.user?.name}
+                          width={50}
+                          height={50}
+                          className="w-[50px] h-[50px] rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-[50px] h-[50px] bg-slate-600 rounded-full flex items-center justify-center cursor-pointer">
+                          <h1 className="uppercase font-semibold text-[18px] text-black dark:text-white">
+                            {item?.user?.name?.charAt(0, 2)}
+                          </h1>
+                        </div>
+                      )}
+                    </div>
+                    <div className="ml-2">
+                      <h1 className="text-[18px] font-bold text-black dark:text-white">
+                        {item?.user.name}
+                      </h1>
+                      <Ratings rating={item?.rating} />
+                      <p className="text-base text-gray-800 dark:text-white font-semibold">
+                        {item?.comment}
+                      </p>
+                      <small className="text-sm text-gray-500 dark:text-gray-400">
+                        {!item.createdAt ? "" : format(item.createdAt)}
+                      </small>
+                    </div>
+                  </div>
+                ))}
+            </div>
           </div>
         )}
       </div>
@@ -363,7 +452,10 @@ const CommentItem = ({
           <div className="w-[50px] h-[50px]">
             {item?.user?.avatar ? (
               <Image
-                src={item?.user?.avatar || ""}
+                src={
+                  item?.user?.avatar ||
+                  "https://res.cloudinary.com/dm0q4cetx/image/upload/v1688005004/avatar_1_q8q7l4.png"
+                }
                 alt={item?.user?.name}
                 width={50}
                 height={50}
@@ -427,12 +519,14 @@ const CommentItem = ({
                   />
                 </div>
                 <div className="pl-3 space-y-1">
-                <div className="flex items-center gap-2">
-        <h5 className="text-[16px] font-[600]">{item?.user.name}</h5>
-        {item.user.role === "admin" && (
-         <RiVerifiedBadgeFill className="text-[20px] text-[#31ff9c]"/>
-        )}
-      </div>
+                  <div className="flex items-center gap-2">
+                    <h5 className="text-[16px] font-[600]">
+                      {item?.user.name}
+                    </h5>
+                    {item.user.role === "admin" && (
+                      <RiVerifiedBadgeFill className="text-[20px] text-[#31ff9c]" />
+                    )}
+                  </div>
 
                   {/* Answer Content */}
                   <p className="text-base text-gray-800 dark:text-gray-300 font-semibold">

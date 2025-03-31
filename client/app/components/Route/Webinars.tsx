@@ -29,17 +29,17 @@ const webinars = [
 
 const Webinars = () => {
   return (
-    <div className="w-full max-w-7xl mx-auto pt-10 pb-20 px-4">
-      <h1 className="text-center font-poppins text-3xl lg:text-4xl font-bold tracking-tight text-white">
+    <div className="w-full max-w-7xl mx-auto pt-10 pb-20 px-4 ">
+      <h1 className="text-center font-poppins text-3xl lg:text-4xl font-bold tracking-tight text-black dark:text-white">
         Upcoming & <span className="text-blue-500">Live Webinars</span>
       </h1>
       <p className="text-center text-gray-400 mt-2">Stay ahead in tech with expert-led sessions.</p>
       
-      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
         {webinars.map((webinar, index) => (
           <div
             key={index}
-            className="bg-gray-900 p-5 rounded-lg shadow-md text-white border border-gray-700"
+            className="rounded-3xl p-5 shadow-[0_7px_14px_rgba(0,0,0,0.1)] dark:bg-[#111C43] w-full min-h-[180px]"
           >
             <img 
               src={webinar.image} 
@@ -47,7 +47,7 @@ const Webinars = () => {
               className="w-full h-40 object-cover rounded-md"
             />
             <div className="mt-3">
-              <h3 className="text-lg sm:text-xl font-semibold">{webinar.title}</h3>
+              <h3 className="text-lg sm:text-xl font-semibold text-black dark:text-white">{webinar.title}</h3>
             </div>
             <p className="text-gray-400 text-sm mt-1">{webinar.source}</p>
             <p className="text-gray-400 text-sm mt-2">{webinar.description}</p>
