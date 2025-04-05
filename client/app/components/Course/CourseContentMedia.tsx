@@ -24,6 +24,10 @@ import { BiMessage } from "react-icons/bi";
 import { format } from "timeago.js";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
 import Ratings from "@/app/utils/Ratings";
+import socketIo from "socket.io-client";
+const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "";
+const socketId = socketIo(ENDPOINT,{
+  transports: ["websocket"],});
 
 type Props = {
   data: any;
@@ -93,12 +97,25 @@ const CourseContentMedia = ({
     if (isSuccess) {
       setQuestion("");
       refetch();
+
       toast.success("Question Added Successfully");
+      socketId.emit("notification", { 
+       title: "New Question Recived",
+       message: `New question added in ${data[activeVideo].title}`,
+       userId: user._id
+      });
     }
     if (answerSuccess) {
       setAnswer("");
       refetch();
       toast.success("Answer Added Successfully");
+      if(user.role !== "admin"){
+        socketId.emit("notification", { 
+          title: "New Question Recived",
+          message: `New question reply in ${data[activeVideo].title}`,
+          userId: user._id
+         });
+      }
     }
     if (error) {
       if ("data" in error) {
@@ -116,6 +133,11 @@ const CourseContentMedia = ({
       setReview("");
       courseRefetch();
       toast.success("Review Added Successfully");
+      socketId.emit("notification", { 
+        title: "New Review Recived",
+        message: `New review added in ${data[activeVideo].title}`,
+        userId: user._id
+       });
     }
     if (reviewError) {
       if ("data" in reviewError) {
@@ -123,7 +145,7 @@ const CourseContentMedia = ({
         toast.error(errorMessage.data.message);
       }
     }
-  }, [answerError, answerSuccess, courseRefetch, error, isSuccess, refetch, reviewError, reviewSuccess]);
+  }, [activeVideo, answerError, answerSuccess, courseRefetch, data, error, isSuccess, refetch, reviewError, reviewSuccess, user._id]);
 
   const handleAnswerSubmit = () => {
     addAnswerInQuestion({
