@@ -90,7 +90,7 @@ export const createOrder = CatchAsyncError(
       await NotificationModel.create({
         user: user?._id,
         title: "New Order",
-        message: `You have successfully purchased ${course?.name}`,
+        message: `${user?.name} have successfully purchased ${course?.name}`,
       });
 
       course.purchased ? (course.purchased += 1) : course.purchased;

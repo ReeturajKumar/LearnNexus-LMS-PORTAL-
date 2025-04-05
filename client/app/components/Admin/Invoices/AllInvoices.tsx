@@ -28,8 +28,9 @@ const AllInvoices = ({isDashboard}: Props) => {
 
 
   useEffect(() => {
-    if (data?.orders && userData?.users && courseData?.courses) {
-      const temp = data.orders.map((item: any) => {
+    if (data?.order && userData?.users && courseData?.courses) {
+      const temp = data.order.map((item: any) => {
+    
         const user = userData.users.find((user: any) => user._id === item.userId);
         const course = courseData.courses.find((course: any) => course._id === item.courseId);
         return {
@@ -101,6 +102,13 @@ const AllInvoices = ({isDashboard}: Props) => {
     price: item.price,
     created_at: format(item.createdAt),
   }));
+
+
+  console.log("Orders:", data);
+console.log("Users:", userData);
+console.log("Courses:", courseData);
+console.log("Processed Rows:", rows2);
+
   
   
   
@@ -159,12 +167,13 @@ const AllInvoices = ({isDashboard}: Props) => {
             },
             }}
             >
-            <DataGrid
-            checkboxSelection={isDashboard ? false : true}
-            rows={rows}
-            columns={columns}
-            components={isDashboard ? {} : {Toolbar: GridToolbar}}
-            />
+           <DataGrid
+  checkboxSelection={isDashboard ? false : true}
+  rows={rows2} // ✅ Use your actual API-mapped data
+  columns={columns}
+  components={isDashboard ? {} : {Toolbar: GridToolbar}}
+/>
+
           </Box>
           </Box>
         )
