@@ -6,7 +6,7 @@ import { styles } from "@/app/styless/style";
 import CoursePlayer from "@/app/utils/CoursePlayer";
 import Ratings from "@/app/utils/Ratings";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdCheckboxOutline, IoMdCloseCircleOutline } from "react-icons/io";
 import { useSelector } from "react-redux";
 import { format } from "timeago.js";
@@ -26,12 +26,20 @@ type Props = {
   data: any;
   clientSecret: string;
   stripePromise: any;
+  setRoute:any
+  setOpen:any
 };
 
-const CourseDetails = ({ data, stripePromise, clientSecret }: Props) => {
+const CourseDetails = ({ data, stripePromise, clientSecret,setRoute,setOpen:openAuthModel }: Props) => {
   const { data: userData } = useLoadeUserQuery(undefined, {});
-  const user = userData?.user;
+  const [user, setUser] = useState<any>()
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setUser(userData?.user)
+
+  }, [userData]);
+  
 
   const discountPercentage =
     data?.estimatedPrice && data?.price
@@ -44,7 +52,12 @@ const CourseDetails = ({ data, stripePromise, clientSecret }: Props) => {
     user && user?.courses?.find((item: any) => item._id === data._id);
 
   const handleOrder = (e: any) => {
+   if (user) {
     setOpen(true);
+   } else {
+    setRoute("Login");
+    openAuthModel(true);
+   }
   };
 
   console.log(data);

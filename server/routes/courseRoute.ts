@@ -23,7 +23,7 @@ courseRouter.get(
 );
 
 
-courseRouter.get("/get-course",isAuthenticated, getAllCourse);
+courseRouter.get("/get-course", getAllCourse);
 
 
 courseRouter.get(

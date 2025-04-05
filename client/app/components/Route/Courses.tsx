@@ -10,7 +10,7 @@ type Props = {}
 
 const Courses = (props: Props) => {
   const {data,isLoading,error} = useGetAlllUserCoursesQuery({});
-  const [courses,setCourses] = useState<any[]>([]);
+  const [courses,setCourses] = useState([]);
 
   useEffect(() => {
     setCourses(data?.courses);

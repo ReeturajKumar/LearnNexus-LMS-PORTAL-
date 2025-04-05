@@ -26,7 +26,7 @@ const CourseCard: FC<Props> = ({ item, isProfile }) => {
           alt=""
         />
         <br />
-        <h1 className="font-poppins font-bold text-[20px] dark:text-white truncate overflow-hidden whitespace-nowrap">
+        <h1 className="font-poppins font-bold text-[20px] text-black dark:text-white truncate overflow-hidden whitespace-nowrap">
           {item.name}
         </h1>
 
