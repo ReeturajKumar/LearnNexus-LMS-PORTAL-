@@ -17,7 +17,7 @@ const About: React.FC = () => {
 
   return (
     <section className=" py-20 px-4 md:px-12">
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12">
+      <div className="w-[95%] mx-auto flex flex-col lg:flex-row gap-12">
 
         {/* LEFT SIDE - What is LearnNexus */}
         <div className="w-full lg:w-[70%] space-y-6">

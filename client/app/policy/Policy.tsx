@@ -15,7 +15,7 @@ const Policy = (props: Props) => {
   ];
   return (
     <section className=" py-20 px-4 md:px-12">
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12">
+      <div className="w-[95%] mx-auto flex flex-col lg:flex-row gap-12">
         {/* LEFT SIDE - Platform Terms & Privacy Policy */}
         <div className="w-full lg:w-[70%] space-y-6">
           <h1 className="text-4xl md:text-5xl font-bold text-black dark:text-white">
