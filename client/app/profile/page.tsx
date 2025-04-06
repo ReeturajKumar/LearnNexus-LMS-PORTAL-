@@ -10,6 +10,7 @@ import Header from '../components/Header';
 import Heading from '../utils/Heading';
 import { useSelector } from 'react-redux';
 import Profile from '../components/Profile/Profile';
+import Footer from '../components/Footer/Footer';
 
 type Props = {
 }
@@ -21,7 +22,7 @@ const page: FC<Props> = (props) => {
     const {user} = useSelector((state: any) => state.auth)
 
   return (
-    <div>
+    <div className='min-h-screen'>
       <Protected>
       <Heading
         title={`${user?.name} Profile - LearnNexus`}
@@ -38,7 +39,11 @@ const page: FC<Props> = (props) => {
       <Profile
       user={user}
       />
+      
       </Protected>
+      <br />
+      <br />
+      <Footer/>
     </div>
   )
 }

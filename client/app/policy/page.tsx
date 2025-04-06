@@ -2,6 +2,8 @@
 import React, { useState } from 'react'
 import Heading from '../utils/Heading'
 import Header from '../components/Header'
+import Footer from '../components/Footer/Footer'
+import Policy from './Policy'
 
 type Props = {}
 
@@ -24,6 +26,9 @@ const Page = (props: Props) => {
           setOpen={setOpen}
           activeItem={activeItem}
         />
+        <br/>
+        <Policy />
+        <Footer/>
     </div>
   )
 }

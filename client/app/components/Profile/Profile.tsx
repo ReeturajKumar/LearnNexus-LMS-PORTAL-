@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { FC, useState, useEffect } from "react";
 import SidebarProfile from "./SidebarProfile";
@@ -5,6 +6,8 @@ import { useLogOutQuery } from "@/redux/features/auth/authApi";
 import { signOut } from "next-auth/react";
 import ProfileInfo from "./ProfileInfo";
 import ChangePassword from "./ChangePassword";
+import CourseCard from "../Course/CourseCard";
+import { useGetAlllUserCoursesQuery } from "@/redux/features/courses/coursesApi";
 
 type Props = {
   user: any;
@@ -13,7 +16,9 @@ type Props = {
 const Profile: FC<Props> = ({ user }) => {
   const [scroll, setScroll] = useState(false);
   const [active, setActive] = useState(1);
-  const [avatar, setAvatar] = useState(null);
+  const [avatar] = useState(null);
+  const [courses, setCourses] = useState([]);
+  const {data} = useGetAlllUserCoursesQuery(undefined,{});
   const [logOut, setlogOut] = useState(false);
   const {} = useLogOutQuery(undefined, {
     skip: !logOut ? true : false,
@@ -32,6 +37,18 @@ const Profile: FC<Props> = ({ user }) => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+
+
+  useEffect(() => {
+    if (data) {
+      const filteredCourses = user.courses
+      .map((userCourses:any) => 
+        data.courses.find((course: any) => course._id === userCourses._id))
+      .filter((course: any) => course !== undefined);
+      setCourses(filteredCourses);
+    }
+  }, [data]);
 
   return (
     <div className="w-[85%] flex mx-auto pt-10 px-4">
@@ -60,6 +77,24 @@ const Profile: FC<Props> = ({ user }) => {
           <ChangePassword />
         </div>
       )}
+
+{active === 3 && (
+  <div className="w-full mt-[80px] px-4">
+    {courses.length > 0 ? (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+
+        {courses.map((item: any, index: number) => (
+          <CourseCard key={index} item={item} user={user} isProfile={true} />
+        ))}
+      </div>
+    ) : (
+      <h1 className="text-center font-poppins text-[25px] leading-[35px] sm:text-3xl lg:text-4xl dark:text-white mt-6 text-[#000] font-[700] tracking-tight">
+        You have not enrolled in any course
+      </h1>
+    )}
+  </div>
+)}
+
     </div>
   );
 };
