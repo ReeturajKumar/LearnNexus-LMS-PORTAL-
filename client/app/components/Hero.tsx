@@ -56,7 +56,7 @@ const Hero: FC<Props> = (props) => {
              {data?.layout?.banner?.title}
             </span>{""}
             <br />
-            <span className="text-blue-500">Better Instantly</span>
+            <span className="bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">Better Instantly</span>
           </h2>
           <p className="text-sm sm:text-base mt-3 sm:mt-4 max-w-md sm:max-w-lg">
             <span className="text-gray-700 dark:text-gray-300">
@@ -71,7 +71,7 @@ const Hero: FC<Props> = (props) => {
               placeholder="Search Courses..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="flex-1 px-4 py-2 rounded-l-md border border-gray-300 outline-none text-black dark:text-white bg-gray-100 dark:bg-gray-800"
+              className="flex-1 px-4 py-2 rounded-l-md outline-none text-black dark:text-white bg-gray-100 dark:bg-gray-800"
             />
             <button className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-r-md text-sm sm:text-base"
             onClick={handleSearch}

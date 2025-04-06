@@ -25,7 +25,7 @@ const FAQ = (props: Props) => {
         <h1
           className={`${styles.title} dark:text-white text-black 800px:text-[40px}`}
         >
-          Frequently Asked <span className="text-blue-500">Questions</span>
+          Frequently Asked <span className="bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent pl-1">Questions</span>
         </h1>
         <div className="mt-12">
           <dl className="space-y-8">

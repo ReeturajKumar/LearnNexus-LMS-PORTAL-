@@ -65,7 +65,7 @@ const SignUp: FC<Props> = ({ setRoute }) => {
 
   return (
     <div className="w-full">
-      <h1 className={styles.title}>Join With LearnNexus</h1>
+      <h1 className={styles.title}>Join With <span className="bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent pl-1">LearnNexus</span></h1>
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* ✅ Name Input */}
         <div className="flex flex-col">

@@ -15,7 +15,7 @@ type Props = {
 
 const ReviewsCard = ({ item }: Props) => {
   return (
-    <div className="border dark:border-gray-700  rounded-3xl p-5 shadow-[0_7px_14px_rgba(0,0,0,0.1)] dark:bg-[#111C43] w-full min-h-[180px]">
+    <div className=" rounded-3xl p-5 shadow-[0_7px_14px_rgba(0,0,0,0.1)] dark:bg-gray-900 w-full min-h-[180px]">
       {/* Header - Avatar, Name, Profession */}
       <div className="flex items-center gap-4">
         <Image

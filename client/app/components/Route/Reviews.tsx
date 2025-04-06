@@ -2,7 +2,6 @@
 import React from "react";
 import ReviewsCard from "./ReviewsCard";
 import Image from "next/image";
-import { name } from "ejs";
 
 
 type Props = {
@@ -91,7 +90,7 @@ const Reviews = () => {
         {/* Right Side - Text Content */}
         <div className="w-full md:w-1/2 text-center md:text-left">
           <h3 className="text-3xl md:text-4xl font-bold leading-snug dark:text-white text-black">
-            Our Students Are <span className="text-blue-500">Our Strength</span>
+            Our Students Are <span className="bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">Our Strength</span>
             <br /> See What They Say About Us
           </h3>
           <p className="mt-4 text-gray-400 text-lg">

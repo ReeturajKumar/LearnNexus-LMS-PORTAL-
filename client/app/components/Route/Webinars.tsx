@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import Link from "next/link";
 
@@ -31,7 +32,7 @@ const Webinars = () => {
   return (
     <div className="w-full max-w-7xl mx-auto pt-10 pb-20 px-4 ">
       <h1 className="text-center font-poppins text-3xl lg:text-4xl font-bold tracking-tight text-black dark:text-white">
-        Upcoming & <span className="text-blue-500">Live Webinars</span>
+        Upcoming & <span className="bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">Live Webinars</span>
       </h1>
       <p className="text-center text-gray-400 mt-2">Stay ahead in tech with expert-led sessions.</p>
       
@@ -39,7 +40,7 @@ const Webinars = () => {
         {webinars.map((webinar, index) => (
           <div
             key={index}
-            className="rounded-3xl p-5 shadow-[0_7px_14px_rgba(0,0,0,0.1)] dark:bg-[#111C43] w-full min-h-[180px]"
+            className="rounded-3xl p-5 shadow-[0_7px_14px_rgba(0,0,0,0.1)] dark:bg-gray-900 w-full min-h-[180px]"
           >
             <img 
               src={webinar.image} 
