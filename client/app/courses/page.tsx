@@ -52,7 +52,7 @@ const Page = (props: Props) => {
           activeItem={1}
           />
           <div className='mt-20'>
-          <div className='w-[95%] 800px:w-[85%] m-auto min-h-[70vh]'>
+          <div className='w-[95%] 800px:w-[85%] m-auto min-h-screen'>
             <Heading
               title={"All Courses - LearnNexus"}
               description={"LearnNexus is a platform that provides a wide range of courses and resources for learning and self-improvement."}

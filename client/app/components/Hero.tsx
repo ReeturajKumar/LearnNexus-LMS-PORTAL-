@@ -9,6 +9,7 @@ import H3 from '../../public/assets/H3.jpg';
 import { useGetHeroDataQuery } from '@/redux/features/layout/layoutApi';
 import Loader from './Loader/Loader';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 type Props = {};
 
@@ -105,9 +106,9 @@ const Hero: FC<Props> = (props) => {
               <span className="text-gray-700 dark:text-gray-300">
                 People already trust us.{' '}
               </span>
-              <a href="#" className="text-green-500 underline">
-                View Courses
-              </a>
+              <Link href={"/courses"} className="text-green-500 underline">
+              View Courses
+              </Link>
             </p>
           </div>
         </div>
