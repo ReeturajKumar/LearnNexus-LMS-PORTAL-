@@ -4,7 +4,7 @@ import { CatchAsyncError } from "../middelware/catchAsyncErrors";
 import ErroHandler from "./../utils/ErrorHandler";
 import OrderModel, { IOrder } from "../models/orderModel";
 import userModel from "../models/userModel";
-import CourseModel from "../models/courseModel";
+import CourseModel, { ICourse } from "../models/courseModel";
 import path from "path";
 import ejs from "ejs";
 import sendMail from "../utils/sendMails";
@@ -31,14 +31,14 @@ export const createOrder = CatchAsyncError(
       }
       const user = await userModel.findById(req.user?._id);
       const courseExistIUser = user?.courses.some(
-        (course: any) => course._id.toString() === courseId.toString()
+        (course: any) => course._id.toString() === courseId
       );
 
       if (courseExistIUser) {
         return next(new ErroHandler("You already purchased this course", 400));
       }
 
-      const course = (await CourseModel.findById(courseId)) as any;
+      const course: any = await CourseModel.findById(courseId);
 
       if (!course) {
         return next(new ErroHandler("Course not found", 404));
@@ -84,6 +84,7 @@ export const createOrder = CatchAsyncError(
       }
 
       user?.courses.push(course?._id);
+
       await redis.set(req.user?._id as string, JSON.stringify(user));
       await user?.save();
 
@@ -93,7 +94,7 @@ export const createOrder = CatchAsyncError(
         message: `${user?.name} have successfully purchased ${course?.name}`,
       });
 
-      course.purchased ? (course.purchased += 1) : course.purchased;
+      course.purchased =  course.purchased +1;
 
       await course.save();
       newOrder(data, res, next);
