@@ -106,7 +106,7 @@ export const editLayout = CatchAsyncError(
           uploadedImage = {
             public_id: data.public_id,
             url: data.secure_url,
-          };
+          } as any
         }
 
         // ✅ Updated banner object
