@@ -22,7 +22,7 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: [
-      "http://localhost:3000",],
+      "learn-nexus-lms-portal-hy1r.vercel.app",],
       credentials: true
   })
 );
