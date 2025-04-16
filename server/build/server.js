@@ -18,6 +18,6 @@ cloudinary_1.v2.config({
 });
 (0, socketServer_1.initSocketServer)(server);
 server.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
+    console.log(`Server is running on port ${process.env.PORT} || 5000`);
     (0, db_1.default)();
 });
