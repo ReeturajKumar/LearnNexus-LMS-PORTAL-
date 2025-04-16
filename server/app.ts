@@ -22,7 +22,7 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: [
-      "https://learn-nexus-lms-portal-mg4g.vercel.app/",],
+      "https://learnnexus.vercel.app",],
       credentials: true
   })
 );
