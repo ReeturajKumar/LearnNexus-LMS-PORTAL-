@@ -10,14 +10,17 @@ const db_1 = __importDefault(require("./utils/db"));
 const socketServer_1 = require("./socketServer");
 require("dotenv").config();
 const server = http_1.default.createServer(app_1.app);
-//cloudinary config
+// Cloudinary config
 cloudinary_1.v2.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.CLOUD_API_KEY,
     api_secret: process.env.CLOUD_SECRET_KEY,
 });
+// Initialize socket server
 (0, socketServer_1.initSocketServer)(server);
-server.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT} || 5000`);
+// Set the port, fallback to 5000 if not provided
+const port = process.env.PORT || 5000;
+server.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
     (0, db_1.default)();
 });
