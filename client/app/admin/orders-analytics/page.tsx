@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 import DashboardHeader from '../../../app/components/Admin/DashBoadrdHeader'
 import AdminSidebar from '@/app/components/Admin/Sidebar/AdminSidebar';
@@ -7,7 +9,7 @@ import OrdersAnalytics from '@/app/components/Admin/Analytics/OrdersAnalytics';
 
 type Props = {}
 
-const page = (props: Props) => {
+const Page = (props: Props) => {
   return (
     <div>
       <Heading
@@ -28,4 +30,4 @@ const page = (props: Props) => {
   )
 }
 
-export default page
+export default Page

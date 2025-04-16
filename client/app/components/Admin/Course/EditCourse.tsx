@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
@@ -15,7 +14,7 @@ type Props = {
   id:string
 };
 
-const EditCourse = ({id}) => {
+const EditCourse = ({id}: Props) => {
 
   const [editCourse, {isSuccess,error}] = useEditCourseMutation();
 

@@ -52,7 +52,7 @@ const Login: FC<Props> = ({ setRoute, setOpen }) => {
         toast.error(errorData.data.message);
       }
     }
-  }, [isSuccess, error]);
+  }, [isSuccess, error, setOpen]);
 
   const { touched, errors, values, handleChange, handleBlur, handleSubmit } =
     formik;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react'
 import { IoMdCheckmark } from "react-icons/io";
@@ -7,7 +8,7 @@ type Props = {
   setActive: (active: number) => void
 }
 
-const CourseOptions = ({active, setActive}) => {
+const CourseOptions = ({active, setActive}: any) => {
   const options = [
     "Course Information",
     "Course Options",

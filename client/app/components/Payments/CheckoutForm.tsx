@@ -69,7 +69,7 @@ const CheckoutForm = ({ setOpen, data,user }: Props) => {
         toast.error(errorMessage.data.message);
       }
     }
-  }, [orderData, error, data._id]);
+  }, [orderData, error, data._id, data.name, user._id]);
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>

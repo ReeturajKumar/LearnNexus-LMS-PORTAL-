@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import React, { FC, useEffect, useState} from 'react'
 import { ThemeSwitcher } from '../ThemeSwitcher'
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import socketIo from "socket.io-client";
+import { useCallback } from 'react';
 import { useGetAllNotificationsQuery, useUpdateNotificationStatusMutation } from '@/redux/features/notifications/notificationApi';
 import { format } from 'timeago.js';
 const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "";
@@ -30,9 +30,9 @@ const DashBoadrdHeader: FC<Props>= ({open, setOpen}) => {
     ));
 
 
-  const playerNotificationSound = () => {
-    audio.play();
-  }
+    const playerNotificationSound = useCallback(() => {
+      audio.play();
+    }, [audio]);
 
   useEffect(() => {
    if(data){
@@ -45,14 +45,14 @@ const DashBoadrdHeader: FC<Props>= ({open, setOpen}) => {
     refetch();
    }
    audio.load();
-  }, [data, isSuccess]);
+  }, [audio, data, isSuccess, refetch]);
 
   useEffect(() => {
     socketId.on("newNotification", (data) => {
       refetch();
       playerNotificationSound();
     })
-  }, []);
+  }, [playerNotificationSound, refetch]);
 
 
   const handleNotificationStatusChange = async (id: any) => {

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import Ratings from "@/app/utils/Ratings";
 import Image from "next/image";
@@ -12,7 +11,7 @@ type Props = {
   isProfile?: boolean;
 };
 
-const CourseCard: FC<Props> = ({ item, isProfile }) => {
+const CourseCard: FC<Props> = ({ item, isProfile}) => {
   return (
     <Link
       href={!isProfile ? `/course/${item._id}` : `course-access/${item._id}`}

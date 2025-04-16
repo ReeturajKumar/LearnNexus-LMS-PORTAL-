@@ -169,9 +169,9 @@ console.log("Processed Rows:", rows2);
             >
            <DataGrid
   checkboxSelection={isDashboard ? false : true}
-  rows={rows2} // ✅ Use your actual API-mapped data
+  rows={rows2}
   columns={columns}
-  components={isDashboard ? {} : {Toolbar: GridToolbar}}
+  slots={isDashboard ? {} : { toolbar: GridToolbar }}
 />
 
           </Box>

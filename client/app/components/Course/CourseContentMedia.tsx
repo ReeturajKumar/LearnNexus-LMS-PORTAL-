@@ -145,7 +145,7 @@ const CourseContentMedia = ({
         toast.error(errorMessage.data.message);
       }
     }
-  }, [activeVideo, answerError, answerSuccess, courseRefetch, data, error, isSuccess, refetch, reviewError, reviewSuccess, user._id]);
+  }, [activeVideo, answerError, answerSuccess, courseRefetch, data, error, isSuccess, refetch, reviewError, reviewSuccess, user._id, user.role]);
 
   const handleAnswerSubmit = () => {
     addAnswerInQuestion({
@@ -530,7 +530,7 @@ const CommentItem = ({
         {replyActive && (
           <>
             {item.questionReplies.map((item: any, index: any) => (
-              <div className="w-full flex 800px:ml-16 my-5 text-black dark:text-white">
+              <div className="w-full flex 800px:ml-16 my-5 text-black dark:text-white" key={index}>
                 <div>
                   <Image
                     src={item.user.avatar ? item.user.avatar.url : ""}

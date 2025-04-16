@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Image from "next/image";
 import React, { FC } from "react";
 import avatarDefault from "../../../public/assets/avatar.webp";

@@ -48,7 +48,7 @@ const Profile: FC<Props> = ({ user }) => {
       .filter((course: any) => course !== undefined);
       setCourses(filteredCourses);
     }
-  }, [data]);
+  }, [data, user.courses]);
 
   return (
     <div className="w-[85%] flex mx-auto pt-10 px-4">
@@ -84,7 +84,7 @@ const Profile: FC<Props> = ({ user }) => {
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
 
         {courses.map((item: any, index: number) => (
-          <CourseCard key={index} item={item} user={user} isProfile={true} />
+          <CourseCard key={index} item={item} isProfile={true} />
         ))}
       </div>
     ) : (

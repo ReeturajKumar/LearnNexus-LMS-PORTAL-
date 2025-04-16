@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 "use client"
 import DashboardHeader from '../../../app/components/Admin/DashBoadrdHeader'
 import AdminSidebar from '@/app/components/Admin/Sidebar/AdminSidebar';

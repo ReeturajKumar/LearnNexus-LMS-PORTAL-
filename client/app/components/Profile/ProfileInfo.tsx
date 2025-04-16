@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Image from "next/image";
 import React, { FC, useEffect, useState } from "react";
 import avatarDefault from "../../../public/assets/avatar.webp";
