@@ -1,11 +1,9 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
     domains: ["res.cloudinary.com", "randomuser.me", "cdn-icons-png.flaticon.com"],
   },
   experimental: {
-    reactRoot: true,
     suppressHydrationWarning: true,
   },
 };
