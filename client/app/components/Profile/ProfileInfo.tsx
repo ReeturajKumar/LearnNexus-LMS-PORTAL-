@@ -26,7 +26,7 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
     fileReader.onload = () => {
       if (fileReader.readyState === 2) {
         const newAvatar = fileReader.result;
-        setLocalAvatar(newAvatar); // Update local state for instant UI change
+        setLocalAvatar(newAvatar);
         updateAvatar(newAvatar);
       }
     };
