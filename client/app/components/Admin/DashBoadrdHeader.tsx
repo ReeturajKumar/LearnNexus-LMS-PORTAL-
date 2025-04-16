@@ -62,50 +62,61 @@ const DashBoadrdHeader: FC<Props>= ({open, setOpen}) => {
   
 
   return (
-    <div className='w-full flex items-center justify-end p-3 fixed top-5 right-0'>
-      <ThemeSwitcher />
-        <div className='relative cursor-pointer mr-2'
-        onClick={() => setOpen(!open)}
-        >
-          <NotificationsOutlinedIcon className='text-2xl cursor-pointer dark:text-white text-black'/>
-          <span className='absolute -top-2 -right-2 bg-[#3ccba0] rounded-full w-[20px] h-[20px] text-[12px] flex items-center justify-center text-white'>
-            {notifications && notifications.length}
-          </span>
-        </div>
-        {
-          open && (
-            <div className='w-[350px] h-[60vh] overflow-y-scroll py-3 px-2 border border-[#ffffff0c] dark:bg-[#0e1633] bg-white absolute top-16 shadow-xl z-50 rounded'>
+    <div className="w-full flex items-center justify-end p-3 fixed top-5 right-0 z-50">
+    <ThemeSwitcher />
+    <div
+      className="relative cursor-pointer ml-3"
+      onClick={() => setOpen(!open)}
+    >
+      <NotificationsOutlinedIcon className="text-2xl dark:text-white text-black" />
+      {notifications.length > 0 && (
+        <span className="absolute -top-2 -right-2 bg-[#3ccba0] rounded-full w-[20px] h-[20px] text-[12px] flex items-center justify-center text-white">
+          {notifications.length}
+        </span>
+      )}
 
-              <h5 className='text-center py-3 text-black dark:text-white text-[20px] font-poppins'>
-                Notifications
-              </h5>
-              {
-                notifications && notifications.map((item: any,index: number) => (
-                  <div className='dark:bg-[#2d3a4e] bg-[#00000013] font-poppins border-b dark:border-b-[#ffffff47] border-b-[#0000000f]'>
-                  <div className='w-full flex items-center justify-between p-2'>
-                    <p className='text-black dark:text-white'>
-                      {item.title}
-                    </p>
-                    <p className='text-black dark:text-white cursor-pointer'
+      {/* Dropdown */}
+      {open && (
+        <div className="w-[350px] max-h-[60vh] overflow-y-auto py-3 px-3 border border-[#ffffff0c] dark:bg-[#0e1633] bg-white absolute right-0 top-12 shadow-xl rounded-md">
+          <h5 className="text-center py-2 text-black dark:text-white text-[20px] font-poppins font-semibold">
+            Notifications
+          </h5>
+          {notifications.length === 0 ? (
+            <p className="text-center text-gray-400 mt-5 font-poppins">
+              No new notifications
+            </p>
+          ) : (
+            notifications.map((item: any, index: number) => (
+              <div
+                key={item._id || index}
+                className="mb-3 p-3 rounded-lg dark:bg-[#2d3a4e] bg-[#f3f4f6] shadow-sm"
+              >
+                <div className="flex justify-between items-start mb-1">
+                  <p className="font-medium text-black dark:text-white">
+                    {item.title}
+                  </p>
+                  <button
+                    className="text-sm text-blue-500 hover:underline"
                     onClick={() => handleNotificationStatusChange(item._id)}
-                    >
-                      Mark as read
-                    </p>
-                  </div>
-                  <p className='px-2 text-black dark:text-white'>
-                    {item.message}
-                  </p>
-                  <p className='p-2 text-black dark:text-white text-[14px]'>
-                   {format(item.createdAt)}
-                  </p>
+                  >
+                    Mark as read
+                  </button>
                 </div>
-                ))
-              }
-            </div>
-          )
-        }
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  {item.message}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  {format(item.createdAt)}
+                </p>
+              </div>
+            ))
+          )}
+        </div>
+      )}
     </div>
-  )
-}
+  </div>
+);
+};
+
 
 export default DashBoadrdHeader
