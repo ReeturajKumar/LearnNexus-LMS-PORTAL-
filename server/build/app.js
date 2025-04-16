@@ -24,7 +24,7 @@ exports.app.use((0, cookie_parser_1.default)());
 //cors
 exports.app.use((0, cors_1.default)({
     origin: [
-        "https://learn-nexus-lms-portal-hy1r.vercel.app",
+        "https://learn-nexus-lms-portal-mg4g.vercel.app/",
     ],
     credentials: true
 }));
