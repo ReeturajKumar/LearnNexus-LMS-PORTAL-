@@ -2,17 +2,12 @@
   "name": "learnnexus",
   "version": "1.0.0",
   "description": "",
-  "main": "build/server.js",
-  "type": "commonjs",
-  "engines": {
-    "node": "18.x"
-  },
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn --transpile-only server.ts",
-    "start" : "node build/server.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false",
-    "build": "tsc"
+    "start": "node build/server.js",
+        "build": "tsc"
   },
   "author": "Reeturaj Kumar",
   "license": "ISC",
