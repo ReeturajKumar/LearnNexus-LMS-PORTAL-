@@ -1,9 +1,5 @@
-import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
-
-const CoursesClientPage = dynamic(() => import('./CoursesClientPage'), {
-  ssr: false,
-});
+import CoursesClientPage from './CoursesClientPage';
 
 export default function Page() {
   return (
