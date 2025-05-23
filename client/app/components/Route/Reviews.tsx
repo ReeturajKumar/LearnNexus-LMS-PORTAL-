@@ -3,6 +3,12 @@
 import React from "react";
 import ReviewsCard from "./ReviewsCard";
 import Image from "next/image";
+import img1 from '@/public/assets/U1.jpg'
+import img2 from '@/public/assets/U2.jpg'
+import img3 from '@/public/assets/U3.webp'
+import img4 from '@/public/assets/U4.jpeg'
+import img5 from '@/public/assets/U5.jpeg'
+import img6 from '@/public/assets/U6.jpg'
 
 
 type Props = {
@@ -17,7 +23,7 @@ type Props = {
 export const reviews = [
   {
     name: "Aarav Mehta",
-    avatar: "https://randomuser.me/api/portraits/men/31.jpg",
+    avatar: img1,
     profession: "Student",
     company: "IIT Bombay",
     comment:
@@ -26,7 +32,7 @@ export const reviews = [
   },
   {
     name: "Neha Sharma",
-    avatar: "https://randomuser.me/api/portraits/women/32.jpg",
+    avatar: img2,
     profession: "Computer Science Student",
     company: "Delhi University",
     comment:
@@ -34,8 +40,8 @@ export const reviews = [
     rating: 4,
   },
   {
-    name: "Rohan Verma",
-    avatar: "https://randomuser.me/api/portraits/men/33.jpg",
+    name: "Richa Verma",
+    avatar: img3,
     profession: "Full Stack Developer",
     company: "TCS",
     comment:
@@ -44,7 +50,7 @@ export const reviews = [
   },
   {
     name: "Priya Iyer",
-    avatar: "https://randomuser.me/api/portraits/women/34.jpg",
+    avatar: img4,
     profession: "Junior Web Developer",
     company: "Infosys",
     comment:
@@ -52,8 +58,8 @@ export const reviews = [
     rating: 4,
   },
   {
-    name: "Vikram Singh",
-    avatar: "https://randomuser.me/api/portraits/men/35.jpg",
+    name: "Vaibhavi Singh",
+    avatar: img5,
     profession: "Data Scientist",
     company: "Microsoft India",
     comment:
@@ -62,7 +68,7 @@ export const reviews = [
   },
   {
     name: "Ananya Rao",
-    avatar: "https://randomuser.me/api/portraits/women/36.jpg",
+    avatar: img6,
     profession: "UI/UX Designer",
     company: "Adobe India",
     comment:

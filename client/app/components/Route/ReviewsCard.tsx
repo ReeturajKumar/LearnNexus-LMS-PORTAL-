@@ -1,10 +1,10 @@
 import Ratings from "@/app/utils/Ratings";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import React from "react";
 
 type Props = {
   item: {
-    avatar: string;
+     avatar: StaticImageData;
     name: string;
     profession: string;
     company?: string;
