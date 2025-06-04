@@ -504,11 +504,18 @@ export const deleteCourse = CatchAsyncError(
 // genrate video url
 export const genrateVideoUrl = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
+    const { videoId } = req.body;
+
+    if (!videoId) {
+      return next(new ErroHandler("videoId is required", 400));
+    }
+
     try {
-      const { videoId } = req.body;
+      console.log("VDOCIPHER_API_SECRET:", process.env.VDOCIPHER_API_SECRET);
+
       const response = await axios.post(
         `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
-        { ttl: 300 },
+        { ttl: 300, playbackInfo: true },
         {
           headers: {
             Accept: "application/json",
@@ -520,7 +527,8 @@ export const genrateVideoUrl = CatchAsyncError(
 
       res.json(response.data);
     } catch (error: any) {
-      return next(new ErroHandler(error.message, 400));
+      console.error("Error from VdoCipher:", error?.response?.data || error.message);
+      return next(new ErroHandler(error?.response?.data?.msg || error.message, 400));
     }
   }
 );
