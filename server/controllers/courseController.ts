@@ -506,31 +506,21 @@ export const genrateVideoUrl = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { videoId } = req.body;
-
-      if (!videoId) {
-        return next(new ErroHandler("videoId is required", 400));
-      }
-
       const response = await axios.post(
-        `https://api.vdocipher.com/api/videos/${videoId}/otp`, // ✅ use production endpoint
-        { ttl: 300, playbackInfo: true },
+        `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
+        { ttl: 300 },
         {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
             Authorization: `Apisecret ${process.env.VDOCIPHER_API_SECRET}`,
-            
           },
-          
         }
-        
       );
-      console.log("VdoCipher Secret:", process.env.VDOCIPHER_API_SECRET);
 
-      res.status(200).json(response.data); // ✅ make sure response is sent
+      res.json(response.data);
     } catch (error: any) {
-      console.error("Error from VdoCipher:", error?.response?.data || error.message);
-      return next(new ErroHandler(error?.response?.data?.msg || error.message, 400));
+      return next(new ErroHandler(error.message, 400));
     }
   }
 );
