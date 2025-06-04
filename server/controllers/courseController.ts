@@ -510,7 +510,7 @@ export const genrateVideoUrl = CatchAsyncError(
       console.log("▶️ Request received to generate VdoCipher OTP");
       console.log("📼 Video ID:", videoId);
 
-      const apiUrl = `https://dev.vdocipher.com/api/videos/${videoId}/otp`;
+      const apiUrl = `https://api.vdocipher.com/api/videos/${videoId}/otp`;
 
       console.log("🌐 Hitting VdoCipher API URL:", apiUrl);
 
