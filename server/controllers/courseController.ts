@@ -506,8 +506,16 @@ export const genrateVideoUrl = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { videoId } = req.body;
+
+      console.log("▶️ Request received to generate VdoCipher OTP");
+      console.log("📼 Video ID:", videoId);
+
+      const apiUrl = `https://dev.vdocipher.com/api/videos/${videoId}/otp`;
+
+      console.log("🌐 Hitting VdoCipher API URL:", apiUrl);
+
       const response = await axios.post(
-        `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
+        apiUrl,
         { ttl: 300 },
         {
           headers: {
@@ -518,9 +526,19 @@ export const genrateVideoUrl = CatchAsyncError(
         }
       );
 
+      console.log("✅ OTP and Playback Info retrieved successfully from VdoCipher");
       res.json(response.data);
     } catch (error: any) {
-      return next(new ErroHandler(error.message, 400));
+      console.error("❌ Error while fetching VdoCipher OTP");
+
+      if (error.response) {
+        console.error("📡 VdoCipher Response Status:", error.response.status);
+        console.error("📨 VdoCipher Response Data:", error.response.data);
+        return next(new ErroHandler(`VdoCipher Error: ${JSON.stringify(error.response.data)}`, 400));
+      }
+
+      console.error("💥 Unexpected Error:", error.message);
+      return next(new ErroHandler(error.message, 500));
     }
   }
 );
