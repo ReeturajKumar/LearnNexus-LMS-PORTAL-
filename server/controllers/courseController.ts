@@ -519,9 +519,13 @@ export const genrateVideoUrl = CatchAsyncError(
             Accept: "application/json",
             "Content-Type": "application/json",
             Authorization: `Apisecret ${process.env.VDOCIPHER_API_SECRET}`,
+            
           },
+          
         }
+        
       );
+      console.log("VdoCipher Secret:", process.env.VDOCIPHER_API_SECRET);
 
       res.status(200).json(response.data); // ✅ make sure response is sent
     } catch (error: any) {
