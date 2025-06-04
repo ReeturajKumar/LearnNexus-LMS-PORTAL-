@@ -506,8 +506,11 @@ export const genrateVideoUrl = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { videoId } = req.body;
+        if (!videoId) {
+        return next(new ErroHandler("videoId is required", 400));
+      }
       const response = await axios.post(
-        `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
+       `https://api.vdocipher.com/api/videos/${videoId}/otp`,
         { ttl: 300 },
         {
           headers: {
