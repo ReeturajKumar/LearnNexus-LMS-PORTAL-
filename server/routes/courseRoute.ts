@@ -76,7 +76,6 @@ courseRouter.post(
 
 courseRouter.delete(
   "/delete-course/:id",
-  updateAccessToken,
   isAuthenticated,
   authorizeRoles("admin"),
   deleteCourse
