@@ -79,7 +79,6 @@ const CourseContent: FC<Props> = ({
         videoUrl: "",
         title: "",
         description: "",
-         videoLength: 0, // 👈 add this
         videoSection: newVideoSection,
         links: [
           {
@@ -108,7 +107,6 @@ const CourseContent: FC<Props> = ({
         videoUrl: "",
         title: "",
         description: "",
-          videoLength: 0, // 👈 add this
         videoSection: `Untitled Section  ${activeSection}`,
         links: [
           {
@@ -253,20 +251,20 @@ const CourseContent: FC<Props> = ({
                     </div>
 
 
-                    <div className="mb-3">
+                    {/* <div className="mb-3">
                       <label className={styles.label}>Video Length (in minutes)</label>
-                     <input
-  type="number"
-  placeholder="20"
-  className={styles.input}
-  value={item.videoLength ?? ""}
-  onChange={(e) => {
-    const updatedData = [...courseContentData];
-    updatedData[index].videoLength = Number(e.target.value);
-    setCourseContentData(updatedData);
-  }}
-/>
-                    </div>
+                      <input
+                        type="number"
+                        placeholder="20"
+                        className={styles.input}
+                        value={item.videoLength}
+                        onChange={(e) => {
+                          const updatedData = [...courseContentData];
+                          updatedData[index].videoLength = e.target.value;
+                          setCourseContentData(updatedData);
+                        }}
+                      />
+                    </div> */}
 
                     <div className="mb-3">
                       <label className={styles.label}>Video Description</label>
