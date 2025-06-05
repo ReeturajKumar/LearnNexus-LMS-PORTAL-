@@ -14,7 +14,13 @@ type Props = {
 const CourseContentList: FC<Props> = (props) => {
   const [visibleSection, setVisibleSection] = useState<Set<string>>(new Set<string>());
 
-  const videoSections: string[] = [...new Set<string>(props.data?.map((item: any) => item.videoSection))];
+  // Sanitize data to ensure videoLength is a number
+  const sanitizedData = props.data?.map((item: any) => ({
+    ...item,
+    videoLength: Number(item.videoLength || 0),
+  })) || [];
+
+  const videoSections: string[] = [...new Set<string>(sanitizedData.map((item: any) => item.videoSection))];
 
   let totalCount: number = 0;
 
@@ -32,7 +38,7 @@ const CourseContentList: FC<Props> = (props) => {
     <div className={`mt-6 w-full ${props.isDemo ? 'ml-[-30px] sticky top-24 left-0 z-30' : ''}`}>
       {videoSections.map((section: string, sectionIndex: number) => {
         const isSectionVisible = visibleSection.has(section);
-        const sectionVideos: any[] = props.data.filter((item: any) => item.videoSection === section);
+        const sectionVideos: any[] = sanitizedData.filter((item: any) => item.videoSection === section);
         const sectionVideoCount: number = sectionVideos.length;
         const sectionVideolength: number = sectionVideos.reduce((totalLength: number, item: any) => totalLength + item.videoLength, 0);
         const sectionStartIndex: number = totalCount;
@@ -55,6 +61,7 @@ const CourseContentList: FC<Props> = (props) => {
                 {sectionVideos.map((item: any, index: number) => {
                   const videoIndex: number = sectionStartIndex + index;
                   const contentLength: number = item.videoLength / 60;
+
                   return (
                     <div
                       className={`w-full flex items-center gap-4 p-4 transition-all cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 ${
