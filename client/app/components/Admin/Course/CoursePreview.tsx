@@ -61,12 +61,31 @@ const CoursePreview: FC<Props> = ({
         </div>
 
         <div className="flex items-center">
-          <div
-            className={`${styles.button} !w-[180px] my-3 font-poppins !bg-[crimson] cursor-not-allowed`}
-          >
-            Buy Now {courseData?.price}$
-          </div>
-        </div>
+  {courseData?.price === 0 ? (
+    <div
+      className={`${styles.button} !w-[180px] my-3 font-poppins !bg-green-600 cursor-pointer`}
+      onClick={() => {
+        // Replace this with your actual free enrollment logic
+        console.log("Enroll in free course:", courseData?._id);
+        // handleFreeEnroll(courseData?._id);
+      }}
+    >
+      Go to Course
+    </div>
+  ) : (
+    <div
+      className={`${styles.button} !w-[180px] my-3 font-poppins !bg-[crimson] cursor-pointer`}
+      onClick={() => {
+        // Replace this with your paid checkout logic
+        console.log("Proceed to checkout:", courseData?._id);
+        // handlePaidCheckout(courseData?._id);
+      }}
+    >
+      Buy Now {courseData?.price}$
+    </div>
+  )}
+</div>
+
         <div className="flex items-center">
           <input
             type="text"
