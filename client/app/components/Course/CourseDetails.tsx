@@ -22,7 +22,7 @@ import { useLoadeUserQuery } from "@/redux/features/api/apiSlice";
 import Image from "next/image";
 import avatar from "../../../public/assets/avatar.webp";
 import toast from "react-hot-toast";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 type Props = {
   data: any;
