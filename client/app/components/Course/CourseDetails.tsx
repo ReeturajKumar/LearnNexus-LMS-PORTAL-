@@ -21,6 +21,7 @@ import CheckoutForm from "../Payments/CheckoutForm";
 import { useLoadeUserQuery } from "@/redux/features/api/apiSlice";
 import Image from "next/image";
 import avatar from "../../../public/assets/avatar.webp";
+import toast from "react-hot-toast";
 
 type Props = {
   data: any;
@@ -51,14 +52,24 @@ const CourseDetails = ({ data, stripePromise, clientSecret,setRoute,setOpen:open
   const isPurchased =
     user && user?.courses?.find((item: any) => item._id === data._id);
 
-  const handleOrder = (e: any) => {
-   if (user) {
-    setOpen(true);
-   } else {
+const handleOrder = async () => {
+  if (!user) {
     setRoute("Login");
     openAuthModel(true);
-   }
-  };
+    return;
+  }
+
+  if (isPurchased) return;
+
+  if (data.price === 0) {
+    // Mock enrollment for UI only
+    toast.success("Enrolled! (Not persisted)");
+    return;
+  }
+
+  setOpen(true);
+};
+
 
   console.log(data);
   return (
@@ -220,21 +231,22 @@ const CourseDetails = ({ data, stripePromise, clientSecret,setRoute,setOpen:open
               </div>
 
               <div className="flex items-center">
-                {isPurchased ? (
-                  <Link
-                    className={`${styles.button} !w-[180px] my-3 font-poppins cursor-pointer !bg-[crimson] text-white`}
-                    href={`/course-access/${data._id}`}
-                  >
-                    Go To Course
-                  </Link>
-                ) : (
-                  <div
-                    className={`${styles.button} !w-[180px] my-3 font-poppins cursor-pointer !bg-[crimson]`}
-                    onClick={handleOrder}
-                  >
-                    Buy Now {data.price}$
-                  </div>
-                )}
+               {isPurchased ? (
+  <Link
+    className={`${styles.button} !w-[180px] my-3 font-poppins cursor-pointer !bg-[crimson] text-white`}
+    href={`/course-access/${data._id}`}
+  >
+    Go To Course
+  </Link>
+) : (
+  <button
+    className={`${styles.button} !w-[220px] my-3 font-poppins cursor-pointer !bg-[crimson]`}
+    onClick={handleOrder}
+  >
+    {data.price === 0 ? "Enroll Now For Free" : `Buy Now ${data.price}$`}
+  </button>
+)}
+
               </div>
               <br />
               <p className="pb-1 text-black dark:text-white">
