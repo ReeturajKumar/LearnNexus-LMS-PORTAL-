@@ -22,6 +22,7 @@ import { useLoadeUserQuery } from "@/redux/features/api/apiSlice";
 import Image from "next/image";
 import avatar from "../../../public/assets/avatar.webp";
 import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 type Props = {
   data: any;
@@ -35,6 +36,8 @@ const CourseDetails = ({ data, stripePromise, clientSecret,setRoute,setOpen:open
   const { data: userData } = useLoadeUserQuery(undefined, {});
   const [user, setUser] = useState<any>()
   const [open, setOpen] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     setUser(userData?.user)
@@ -64,6 +67,7 @@ const handleOrder = async () => {
   if (data.price === 0) {
     // Mock enrollment for UI only
     toast.success("Enrolled Successfully");
+     router.push(`/course-access/${data._id}`);
     return;
   }
 
