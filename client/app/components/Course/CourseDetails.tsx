@@ -23,6 +23,7 @@ import Image from "next/image";
 import avatar from "../../../public/assets/avatar.webp";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 type Props = {
   data: any;
@@ -55,7 +56,7 @@ const CourseDetails = ({ data, stripePromise, clientSecret,setRoute,setOpen:open
   const isPurchased =
     user && user?.courses?.find((item: any) => item._id === data._id);
 
-const handleOrder = async () => {
+    const handleOrder = async () => {
   if (!user) {
     setRoute("Login");
     openAuthModel(true);
@@ -65,14 +66,25 @@ const handleOrder = async () => {
   if (isPurchased) return;
 
   if (data.price === 0) {
-    // Mock enrollment for UI only
-    toast.success("Enrolled Successfully");
-     router.push(`/course-access/${data._id}`);
+    try {
+      const res = await axios.post("/free", {
+        courseId: data._id,
+      });
+
+      if (res.status === 200) {
+        toast.success("Enrolled Successfully");
+        router.push(`/course-access/${data._id}`);
+      }
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Enrollment failed");
+    }
+
     return;
   }
 
   setOpen(true);
 };
+
 
 
   console.log(data);

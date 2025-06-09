@@ -104,6 +104,45 @@ export const createOrder = CatchAsyncError(
   }
 );
 
+
+export const enrollFreeCourse = CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+  const { courseId } = req.body;
+
+  if (!req.user) {
+    return next(new ErroHandler("Unauthorized", 401));
+  }
+
+  const user = await userModel.findById(req.user._id);
+  const course = await CourseModel.findById(courseId);
+
+  if (!course) {
+    return next(new ErroHandler("Course not found", 404));
+  }
+
+  if (course.price > 0) {
+    return next(new ErroHandler("Course is not free", 400));
+  }
+
+  const alreadyEnrolled = user?.courses?.some((c: any) => c.toString() === courseId);
+  if (alreadyEnrolled) {
+    return res.status(200).json({ message: "Already enrolled" });
+  }
+
+  user?.courses.push(course.id);
+  course.purchased += 1;
+
+  await user?.save();
+  await course.save();
+
+  await NotificationModel.create({
+    user: user?._id,
+    title: "Free Enrollment",
+    message: `You successfully enrolled in ${course.name}.`,
+  });
+
+  res.status(200).json({ message: "Successfully enrolled", courseId: course._id });
+});
+
 // get all course  order -- admin
 export const getAllOrder = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
