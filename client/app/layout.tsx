@@ -10,6 +10,7 @@ import Loader from "./components/Loader/Loader";
 import socketIo from "socket.io-client";
 const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "";
 import { useEffect } from 'react';
+import Chatbot from "./components/Chatbot/Chatbot";
 const socketId = socketIo(ENDPOINT,{
   transports: ["websocket"],});
 
@@ -41,6 +42,7 @@ export default function RootLayout({
               <Custom>
               {children}
               </Custom>
+              <Chatbot/>
               <Toaster position="top-center" reverseOrder={false} />
             </ThemeProvider>
           </SessionProvider>

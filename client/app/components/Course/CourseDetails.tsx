@@ -128,7 +128,7 @@ const CourseDetails = ({ data, stripePromise, clientSecret,setRoute,setOpen:open
 
             <div className="mt-5">
               <h2 className="text-[22px] font-semibold text-black dark:text-white">
-                What is The Prerequists
+                What are the prerequisites?
               </h2>
               <ul className="mt-3 space-y-2">
                 {data.prereqisites?.map((item: any, index: number) => (
