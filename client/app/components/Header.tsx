@@ -32,6 +32,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
   const [socialAuth, { isSuccess, error }] = useSocialAuthMutation();
   const [logOut, setLogOut] = useState(false);
   const [prevSession, setPrevSession] = useState(data);
+  const currentYear = new Date().getFullYear();
 
   useLogOutQuery(undefined, {
     skip: !logOut,
@@ -159,7 +160,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
                 onClick={() => setOpen(true)}
               />
             )}
-            <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-8">© 2024 LearnNexus</p>
+            <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-8">&copy; {currentYear} LearnNexus. All Rights Reserved.</p>
           </div>
         </div>
       )}
