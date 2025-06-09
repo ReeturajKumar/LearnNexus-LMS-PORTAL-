@@ -67,7 +67,7 @@ const CourseDetails = ({ data, stripePromise, clientSecret,setRoute,setOpen:open
 
   if (data.price === 0) {
     try {
-      const res = await axios.post("/free", {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URI}/free`, {
         courseId: data._id,
       });
 
