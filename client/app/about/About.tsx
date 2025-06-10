@@ -11,7 +11,7 @@ const About: React.FC = () => {
     "Resume building and career prep tools",
     "Real-time coding help with NexGenie",
     "Goal-based learning roadmaps by NexGenie",
-    "Instant answers to tech & general queries via NexGenie",
+    "NexGenie: Instant support for any query",
     "Certificates on course completion",
     "Affordable pricing – no hidden fees",
     "Learn at your own pace – 24/7 access",
