@@ -26,8 +26,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-base text-black dark:text-white hover:text-gray-500">
-                  FAQ
+                <Link href="https://hiretrack.vercel.app/" className="text-base text-black dark:text-white hover:text-gray-500">
+                  Career Page
                 </Link>
               </li>
             </ul>
